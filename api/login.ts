@@ -1,3 +1,4 @@
+
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { userCredentials } from '../data/credentials';
 
@@ -9,8 +10,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
 
     const { loginId, password } = req.body;
 
-    if (!loginId || !password) {
-        return res.status(400).json({ message: 'ID de login e senha são obrigatórios.' });
+    // Add strict validation to ensure inputs are strings before using string methods.
+    // This prevents a server crash if the request body is malformed.
+    if (typeof loginId !== 'string' || typeof password !== 'string') {
+        return res.status(400).json({ message: 'ID de login e senha são obrigatórios e devem ser strings.' });
     }
 
     const sanitizedLoginId = loginId.toLowerCase().trim();
