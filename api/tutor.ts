@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { GoogleGenAI, GenerateContentResponse } from '@google/genai';
 // A Vercel resolverá este caminho relativo a partir da raiz do projeto.
-import { CourseSection, ContentItem, TableData, ImageCarouselData } from '../../types';
+import { CourseSection, ContentItem, TableData, ImageCarouselData } from '../types';
 
 /**
  * Converte um item de conteúdo do curso em uma string de texto simples (markdown).

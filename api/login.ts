@@ -32,7 +32,7 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // 4. Compare the provided password with the one from environment variables
-    if (password === correctPassword) {
+    if (password.trim() === correctPassword) {
         // SUCCESS: Passwords match. Return the user data.
         return res.status(200).json({ user: userCredential.data });
     } else {
