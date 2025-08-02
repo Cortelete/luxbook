@@ -1,4 +1,4 @@
-import { CourseSection } from '../types';
+import { CourseSection } from '../lib/types';
 
 /**
  * Envia uma pergunta para o serviço de backend do Tutor IA.

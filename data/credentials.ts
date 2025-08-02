@@ -11,11 +11,11 @@ import type { UserData } from '../types';
  * 2. Create a corresponding password environment variable in the Vercel dashboard.
  */
 export const userCredentials = new Map<string, { data: UserData; }>([
-  // Admin Login
+  // Admin & Mentor Login
   ['joy', { 
     data: { 
       name: 'Joyci Almeida', 
-      role: 'admin',
+      roles: ['admin', 'mentor'], // User can have multiple roles
       loginId: 'joy',
       courseType: 'Lash Empresária VIP'
     } 
@@ -25,7 +25,7 @@ export const userCredentials = new Map<string, { data: UserData; }>([
   ['pro', {
     data: {
       name: 'Aluna Profissional',
-      role: 'student',
+      roles: ['student'],
       loginId: 'pro',
       courseType: 'Lash Profissional'
     }
@@ -35,7 +35,7 @@ export const userCredentials = new Map<string, { data: UserData; }>([
   ['empreendedora', {
     data: {
       name: 'Aluna Empreendedora',
-      role: 'student',
+      roles: ['student'],
       loginId: 'empreendedora',
       courseType: 'Lash Empreendedora'
     }
@@ -45,7 +45,7 @@ export const userCredentials = new Map<string, { data: UserData; }>([
   ['vip', {
     data: {
       name: 'Aluna Empresária VIP',
-      role: 'student',
+      roles: ['student'],
       loginId: 'vip',
       courseType: 'Lash Empresária VIP'
     }

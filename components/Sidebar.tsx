@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import { CourseSection, AuthenticatedUser } from '../types';
+import { CourseSection, AuthenticatedUser } from '../lib/types';
 import { CloseIcon, HomeIcon, MailIcon, BookOpenIcon, RocketIcon, AcademicCapIcon, SparklesIcon, ChevronDoubleLeftIcon, LogoutIcon, UserIcon, LockClosedIcon, ShieldCheckIcon } from './icons';
 
 interface SidebarProps {
@@ -41,7 +41,7 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
 
   const navOrder = ['intro', 'admin', 'horaDaAcao', 'nossosCursos', 'contato'];
   const introLink = sections.find(s => s.id === 'intro');
-  const adminLink = authenticatedUser?.role === 'admin' ? sections.find(s => s.id === 'admin') : null;
+  const adminLink = authenticatedUser?.roles.includes('admin') ? sections.find(s => s.id === 'admin') : null;
   
   const otherMainLinks = sections
       .filter(s => ['nossosCursos', 'horaDaAcao', 'contato'].includes(s.id))
@@ -64,6 +64,14 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
     if (id === 'nossosCursos') return 'Nossos Cursos';
     if (id === 'horaDaAcao') return 'Hora da Ação';
     return title;
+  }
+  
+  const formatRoles = (roles: AuthenticatedUser['roles']): string => {
+    const roleHierarchy = ['boss', 'admin', 'mentor', 'student'];
+    return roles
+      .sort((a, b) => roleHierarchy.indexOf(a) - roleHierarchy.indexOf(b))
+      .map(role => role.charAt(0).toUpperCase() + role.slice(1))
+      .join(', ');
   }
 
   const renderLink = (section: CourseSection) => (
@@ -170,8 +178,8 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
                       {!isCollapsed && (
                           <div className="ml-3">
                               <p className="text-sm font-semibold text-light-text-primary dark:text-dark-text-primary truncate">{authenticatedUser.name}</p>
-                              <p className={`text-xs ${authenticatedUser.role === 'admin' ? 'text-gold font-bold' : 'text-light-text-secondary dark:text-dark-text-secondary'}`}>
-                                  {authenticatedUser.role === 'admin' ? 'Administradora' : 'Aluna'}
+                              <p className={`text-xs ${authenticatedUser.roles.includes('admin') || authenticatedUser.roles.includes('mentor') ? 'text-gold font-bold' : 'text-light-text-secondary dark:text-dark-text-secondary'}`}>
+                                 {formatRoles(authenticatedUser.roles)}
                               </p>
                           </div>
                       )}

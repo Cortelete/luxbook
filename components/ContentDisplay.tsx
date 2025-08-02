@@ -1,5 +1,5 @@
 import React, { memo, useEffect, useState, useCallback, useMemo, useRef } from 'react';
-import { CourseSection, ContentItem, TableData, ImageCarouselData, TipCategoryData } from '../types';
+import { CourseSection, ContentItem, TableData, ImageCarouselData, TipCategoryData } from '../lib/types';
 import { 
     CheckSquareIcon, MailIcon, WhatsappIcon, InstagramIcon, BookOpenIcon, 
     ChatIcon, PencilSquareIcon, SparklesIcon, CloseIcon, ChevronDownIcon, 

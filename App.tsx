@@ -9,7 +9,7 @@ import CustomCursor from './components/CustomCursor';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import AiChatGate from './components/AiChatGate';
-import { AuthenticatedUser } from './types';
+import { AuthenticatedUser } from './lib/types';
 import UserProfile from './components/UserProfile';
 
 const App: React.FC = () => {
@@ -39,7 +39,7 @@ const App: React.FC = () => {
   
   const sectionsForSidebar = useMemo(() => {
     const allSections = [...courseData];
-    if (authenticatedUser?.role === 'admin') {
+    if (authenticatedUser?.roles.includes('admin')) {
         const introIndex = allSections.findIndex(s => s.id === 'intro');
         // Add admin section after 'intro' if it's not already there
         if (!allSections.find(s => s.id === 'admin')) {
@@ -51,7 +51,7 @@ const App: React.FC = () => {
   
   // Conditionally unlock chat based on user type or sessionStorage flag
   const isChatUnlocked = useMemo(() => {
-    if (authenticatedUser?.courseType === 'Lash Empresária VIP') {
+    if (authenticatedUser?.courseType === 'Lash Empresária VIP' || authenticatedUser?.roles.includes('mentor')) {
         return true;
     }
     return sessionStorage.getItem('isChatUnlocked') === 'true';

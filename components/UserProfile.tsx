@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { AuthenticatedUser } from '../types';
+import { AuthenticatedUser } from '../lib/types';
 import { CloseIcon, UserIcon, KeyIcon, AcademicCapIcon } from './icons';
 
 interface UserProfileProps {

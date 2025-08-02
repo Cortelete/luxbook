@@ -1,4 +1,4 @@
-import { CourseSection } from '../types';
+import { CourseSection } from './lib/types';
 
 /**
  * Defines the data for the Admin Panel section.

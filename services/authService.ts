@@ -1,5 +1,5 @@
-import { userCredentials } from '../data/credentials';
-import { UserData, CourseType } from '../types';
+import { userCredentials } from '../lib/credentials';
+import { UserData, CourseType } from '../lib/types';
 
 /**
  * Sends login credentials to a secure backend endpoint for verification.
@@ -61,7 +61,7 @@ export function prepareRegistration(profileName: string, loginId: string, passwo
 ['${sanitizedLoginId}', {
   data: { 
     name: '${profileName.trim()}', 
-    role: 'student',
+    roles: ['student'],
     loginId: '${sanitizedLoginId}',
     courseType: '${courseType}'
   } 
@@ -75,7 +75,7 @@ export function prepareRegistration(profileName: string, loginId: string, passwo
             <p>Para finalizar, siga os 2 passos seguintes:</p>
             <div>
                 <strong class="text-white">1. Edite o arquivo do código:</strong>
-                <p>Copie o bloco de código abaixo e cole dentro do Map no arquivo <code class="bg-gray-700 p-1 rounded text-gold">data/credentials.ts</code>.</p>
+                <p>Copie o bloco de código abaixo e cole dentro do Map no arquivo <code class="bg-gray-700 p-1 rounded text-gold">lib/credentials.ts</code>.</p>
                 <pre class="bg-gray-800 text-xs p-3 rounded-lg mt-2 overflow-x-auto"><code>${newUserObjectString}</code></pre>
             </div>
             <div>

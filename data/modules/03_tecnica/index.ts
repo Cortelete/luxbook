@@ -1,4 +1,4 @@
-import { CourseSection } from '../../../types';
+import { CourseSection } from '../../../lib/types';
 
 export const tecnicaSection: CourseSection = {
   id: 'tecnica',

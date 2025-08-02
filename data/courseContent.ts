@@ -1,4 +1,4 @@
-import { CourseSection } from '../types';
+import { CourseSection } from './lib/types';
 
 import { introSection } from './modules/01_intro/index';
 import { fundamentosSection } from './modules/02_fundamentos/index';

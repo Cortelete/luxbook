@@ -1,5 +1,5 @@
 import React, { useState, useCallback, memo } from 'react';
-import { ImageCarouselData } from '../types';
+import { ImageCarouselData } from '../lib/types';
 import { ChevronLeftIcon, ChevronRightIcon } from './icons';
 
 interface ImageCarouselProps {

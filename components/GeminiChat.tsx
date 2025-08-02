@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { askAiTutor } from '../services/geminiService';
 import { ChatIcon, CloseIcon, SendIcon, SparklesIcon, LockClosedIcon } from './icons';
-import { CourseSection } from '../types';
+import { CourseSection } from '../lib/types';
 
 interface Message {
   sender: 'user' | 'ai';

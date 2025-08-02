@@ -46,10 +46,13 @@ export interface CourseSection {
 // New type for different course plans
 export type CourseType = 'Lash Profissional' | 'Lash Empreendedora' | 'Lash Empresária VIP';
 
+// Defines the possible roles a user can have.
+export type Role = 'admin' | 'student' | 'mentor' | 'boss';
+
 // Represents the data associated with a logged-in user.
 export interface UserData {
   name: string;
-  role: 'admin' | 'student';
+  roles: Role[]; // A user can have multiple roles
   loginId: string; // The ID used for login (e.g., 'aluna')
   courseType: CourseType; // The course plan the student is enrolled in
 }

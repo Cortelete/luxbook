@@ -1,6 +1,6 @@
 import React, { useState, useEffect, memo, useCallback } from 'react';
-import { userCredentials } from '../data/credentials';
-import { UserData, CourseSection, AuthenticatedUser } from '../types';
+import { userCredentials } from '../lib/credentials';
+import { UserData, CourseSection, AuthenticatedUser, Role } from '../lib/types';
 import { graduationCodes } from '../data/graduationCodes';
 import { aiChatCodes } from '../data/aiChatCodes';
 import { UserIcon, KeyIcon, BookOpenIcon, PencilSquareIcon, AcademicCapIcon } from './icons';
@@ -63,14 +63,14 @@ const EditModuleForm: React.FC<{ section: CourseSection, onSave: (id: string, ne
 
 const AdminPanel: React.FC<{ allSections: CourseSection[], onUpdateSection: (id: string, newTitle: string, newBrief: string) => void }> = memo(({ allSections, onUpdateSection }) => {
     const [activeTab, setActiveTab] = useState<AdminTab>('students');
-    const [students, setStudents] = useState<[string, AuthenticatedUser][]>([]);
+    const [users, setUsers] = useState<[string, AuthenticatedUser][]>([]);
     const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
 
     useEffect(() => {
-        const studentList = Array.from(userCredentials.entries())
-            .filter(([_, value]) => value.data.role === 'student')
+        // Here we'd typically fetch users, but for now we read from the local map
+        const userList = Array.from(userCredentials.entries())
             .map(([key, value]) => [key, value.data] as [string, AuthenticatedUser]);
-        setStudents(studentList);
+        setUsers(userList);
     }, []);
 
     const handleSaveModule = useCallback((id: string, newTitle: string, newBrief: string) => {
@@ -80,6 +80,14 @@ const AdminPanel: React.FC<{ allSections: CourseSection[], onUpdateSection: (id:
     
     const handleCancelEdit = useCallback(() => setEditingSectionId(null), []);
     const handleSetEditingId = useCallback((id: string) => setEditingSectionId(id), []);
+
+    const formatRoles = (roles: Role[]): string => {
+        const roleHierarchy = ['boss', 'admin', 'mentor', 'student'];
+        return roles
+          .sort((a, b) => roleHierarchy.indexOf(a) - roleHierarchy.indexOf(b))
+          .map(role => role.charAt(0).toUpperCase() + role.slice(1))
+          .join(', ');
+    }
 
     const getCourseTypePill = (courseType: AuthenticatedUser['courseType']) => {
         const baseClasses = 'px-2 py-0.5 text-xs font-semibold rounded-full inline-block';
@@ -102,7 +110,7 @@ const AdminPanel: React.FC<{ allSections: CourseSection[], onUpdateSection: (id:
 
                 <div className="bg-light-card dark:bg-dark-card rounded-lg shadow-lg border border-light-border dark:border-dark-border">
                     <div className="flex border-b border-light-border dark:border-dark-border">
-                        <TabButton Icon={UserIcon} label="Alunas" isActive={activeTab === 'students'} onClick={() => setActiveTab('students')} />
+                        <TabButton Icon={UserIcon} label="Usuárias" isActive={activeTab === 'students'} onClick={() => setActiveTab('students')} />
                         <TabButton Icon={KeyIcon} label="Códigos" isActive={activeTab === 'codes'} onClick={() => setActiveTab('codes')} />
                         <TabButton Icon={BookOpenIcon} label="Módulos" isActive={activeTab === 'modules'} onClick={() => setActiveTab('modules')} />
                     </div>
@@ -110,20 +118,26 @@ const AdminPanel: React.FC<{ allSections: CourseSection[], onUpdateSection: (id:
                     <div className="p-4 md:p-6">
                         {activeTab === 'students' && (
                             <div className="animate-fade-in-slide-up">
-                                <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Alunas Cadastradas ({students.length})</h3>
+                                <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Usuárias Cadastradas ({users.length})</h3>
                                 <div className="overflow-x-auto">
                                     <table className="min-w-full">
                                         <thead className="text-left text-sm text-light-text-secondary dark:text-dark-text-secondary">
                                             <tr>
                                                 <th className="p-2">Nome</th>
+                                                <th className="p-2">Cargo</th>
                                                 <th className="p-2">ID de Login</th>
                                                 <th className="p-2">Tipo de Curso</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {students.map(([loginId, userData]) => (
+                                            {users.map(([loginId, userData]) => (
                                                 <tr key={loginId} className="border-t border-light-border dark:border-dark-border">
                                                     <td className="p-3 font-semibold">{userData.name}</td>
+                                                    <td className="p-3">
+                                                      <span className={`text-xs font-bold ${userData.roles.includes('admin') || userData.roles.includes('mentor') ? 'text-gold' : 'text-light-text-secondary dark:text-dark-text-secondary'}`}>
+                                                        {formatRoles(userData.roles)}
+                                                      </span>
+                                                    </td>
                                                     <td className="p-3 font-mono text-light-text-secondary dark:text-dark-text-secondary">{userData.loginId}</td>
                                                     <td className="p-3">{getCourseTypePill(userData.courseType)}</td>
                                                 </tr>

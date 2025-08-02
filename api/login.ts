@@ -1,11 +1,15 @@
 
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { userCredentials } from '../data/credentials';
+import { userCredentials } from '../lib/credentials';
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
+    }
+
+    if (!req.body) {
+        return res.status(400).json({ message: 'Corpo da requisição ausente.' });
     }
 
     const { loginId, password } = req.body;

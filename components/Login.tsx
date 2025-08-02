@@ -1,7 +1,7 @@
 import React, { useState, FormEvent, useCallback, memo } from 'react';
 import { login, prepareRegistration } from '../services/authService';
-import { UserIcon, LockClosedIcon, ShieldCheckIcon, CloseIcon, AcademicCapIcon } from './icons';
-import { UserData, CourseType } from '../types';
+import { UserIcon, LockClosedIcon, ShieldCheckIcon, CloseIcon, AcademicCapIcon, RocketIcon } from './icons';
+import { UserData, CourseType } from '../lib/types';
 
 interface LoginProps {
     onLoginSuccess: (user: UserData) => void;
@@ -25,30 +25,70 @@ const InputField: React.FC<{id:string, type:string, value:string, onChange: (val
 ));
 
 
-const AdminGateModal: React.FC<{ onClose: () => void, onAdminSuccess: () => void }> = memo(({ onClose, onAdminSuccess }) => {
-    const [adminCode, setAdminCode] = useState('');
+const AdminGateModal: React.FC<{ onClose: () => void, onAdminSuccess: () => void, onBossSuccess: () => void }> = memo(({ onClose, onAdminSuccess, onBossSuccess }) => {
+    const [accessType, setAccessType] = useState<'admin' | 'boss' | null>(null);
+    const [accessCode, setAccessCode] = useState('');
     const [error, setError] = useState('');
+    
     const ADMIN_CODE = 'luxadmin24';
+    const BOSS_CODE = '4224';
 
-    const handleAdminSubmit = (e: FormEvent) => {
+    const handleAccessSubmit = (e: FormEvent) => {
         e.preventDefault();
-        if (adminCode.trim().toLowerCase() === ADMIN_CODE) {
-            onAdminSuccess();
-        } else {
-            setError('Código de administrador inválido. Saia desta página.');
+        setError('');
+        if (accessType === 'admin') {
+            if (accessCode.trim().toLowerCase() === ADMIN_CODE) {
+                onAdminSuccess();
+            } else {
+                setError('Código de administrador inválido.');
+            }
+        } else if (accessType === 'boss') {
+            if (accessCode.trim() === BOSS_CODE) {
+                onBossSuccess();
+                setError('Painel Boss em desenvolvimento.'); // Placeholder
+            } else {
+                setError('Código de Boss inválido.');
+            }
         }
     };
+    
+    if (!accessType) {
+        return (
+             <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
+                <div className="bg-dark-card p-8 rounded-2xl shadow-2xl border border-dark-border w-full max-w-sm animate-page-enter" onClick={e => e.stopPropagation()}>
+                    <div className="flex justify-between items-center mb-6">
+                        <h3 className="text-xl font-bold text-gold">Acesso Restrito</h3>
+                        <button onClick={onClose} className="text-dark-text-secondary hover:text-gold"><CloseIcon className="w-6 h-6"/></button>
+                    </div>
+                    <div className="space-y-4">
+                        <button onClick={() => setAccessType('admin')} className="w-full text-left flex items-center space-x-4 p-4 bg-dark-hover rounded-lg hover:border-gold border border-transparent transition-all">
+                            <ShieldCheckIcon className="w-8 h-8 text-gold"/>
+                            <div>
+                                <p className="font-bold text-white">Acesso Admin</p>
+                                <p className="text-sm text-dark-text-secondary">Cadastrar novas alunas.</p>
+                            </div>
+                        </button>
+                        <button onClick={() => setAccessType('boss')} className="w-full text-left flex items-center space-x-4 p-4 bg-dark-hover rounded-lg hover:border-gold border border-transparent transition-all">
+                            <RocketIcon className="w-8 h-8 text-red-500"/>
+                            <div>
+                                <p className="font-bold text-white">Acesso Boss</p>
+                                <p className="text-sm text-dark-text-secondary">Gerenciar cargos e permissões.</p>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        )
+    }
 
     return (
         <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={onClose}>
             <div className="bg-dark-card p-8 rounded-2xl shadow-2xl border border-dark-border w-full max-w-sm animate-page-enter" onClick={e => e.stopPropagation()}>
-                <div className="flex justify-between items-center mb-4">
-                    <h3 className="text-xl font-bold text-gold">Acesso Restrito</h3>
-                    <button onClick={onClose} className="text-dark-text-secondary hover:text-gold"><CloseIcon className="w-6 h-6"/></button>
-                </div>
-                <p className="text-dark-text-secondary mb-6 text-sm">Esta área é exclusiva para administração. Insira o código para continuar.</p>
-                <form onSubmit={handleAdminSubmit} className="space-y-4">
-                     <InputField id="admin_code" type="password" value={adminCode} onChange={setAdminCode} placeholder="Código de Administrador" Icon={ShieldCheckIcon} />
+                 <button onClick={() => setAccessType(null)} className="text-sm text-gold hover:underline font-semibold mb-4">&larr; Voltar</button>
+                <h3 className="text-xl font-bold text-gold mb-2">Verificação de {accessType === 'admin' ? 'Admin' : 'Boss'}</h3>
+                <p className="text-dark-text-secondary mb-6 text-sm">Insira o código de acesso para continuar.</p>
+                <form onSubmit={handleAccessSubmit} className="space-y-4">
+                     <InputField id="admin_code" type="password" value={accessCode} onChange={setAccessCode} placeholder={`Código de ${accessType === 'admin' ? 'Admin' : 'Boss'}`} Icon={accessType === 'admin' ? ShieldCheckIcon : RocketIcon} />
                      {error && <p className="text-sm text-red-500 text-center">{error}</p>}
                      <button type="submit" className="w-full py-3 bg-gold text-dark-bg font-bold rounded-lg hover:bg-gold/90 transition-all">
                         Verificar
@@ -61,7 +101,7 @@ const AdminGateModal: React.FC<{ onClose: () => void, onAdminSuccess: () => void
 
 
 const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
-    const [view, setView] = useState<'login' | 'register'>('login');
+    const [view, setView] = useState<'login' | 'register' | 'bossPanel'>('login');
     const [showAdminGate, setShowAdminGate] = useState(false);
     
     // Shared state
@@ -128,6 +168,14 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         setError('');
         setSuccessMessage('');
     }, []);
+    
+    const onBossSuccess = useCallback(() => {
+        setShowAdminGate(false);
+        setView('bossPanel');
+        setError('');
+        setSuccessMessage('');
+    }, []);
+
 
     const loginView = (
         <form id="login-form" onSubmit={handleLoginSubmit} className="space-y-6">
@@ -166,25 +214,51 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
             </div>
         </form>
     );
+    
+    const bossPanelView = (
+        <div>
+             <button type="button" onClick={() => setView('login')} className="text-sm text-gold hover:underline font-semibold mb-4">&larr; Voltar para Login</button>
+            <h3 className="text-xl font-bold text-center text-white pb-2">Painel de Cargos (Boss)</h3>
+            <p className="text-center text-dark-text-secondary">Em desenvolvimento. Aqui você poderá editar os cargos das usuárias.</p>
+        </div>
+    );
+
+    const currentViewContent = () => {
+        switch (view) {
+            case 'login': return loginView;
+            case 'register': return registerView;
+            case 'bossPanel': return bossPanelView;
+            default: return loginView;
+        }
+    }
+    
+    const getTitle = () => {
+         switch (view) {
+            case 'login': return 'Acesso exclusivo para alunas';
+            case 'register': return 'Ferramenta de Cadastro Admin';
+            case 'bossPanel': return 'Gerenciador de Cargos';
+            default: return 'Acesso exclusivo para alunas';
+        }
+    }
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-light-bg dark:bg-dark-bg p-4 font-sans">
-            {showAdminGate && <AdminGateModal onClose={() => setShowAdminGate(false)} onAdminSuccess={onAdminSuccess} />}
+            {showAdminGate && <AdminGateModal onClose={() => setShowAdminGate(false)} onAdminSuccess={onAdminSuccess} onBossSuccess={onBossSuccess} />}
             <div className="w-full max-w-sm mx-auto">
                 <div className="text-center mb-8">
                      <h1 className="text-4xl font-bold text-gold">Luxury Academy</h1>
                      <p className="text-light-text-secondary dark:text-dark-text-secondary mt-2">
-                        {view === 'login' ? 'Acesso exclusivo para alunas' : 'Ferramenta de Cadastro'}
+                        {getTitle()}
                      </p>
                 </div>
 
                 <div className="bg-light-card dark:bg-dark-card p-8 rounded-2xl shadow-2xl border border-light-border dark:border-dark-border">
-                    {view === 'login' ? loginView : registerView}
+                    {currentViewContent()}
                     
                     {error && <p className="mt-4 text-sm text-red-500 text-center">{error}</p>}
                     {successMessage && <div className="mt-4" dangerouslySetInnerHTML={{ __html: successMessage }} />}
 
-                    <div className="mt-6">
+                    {view !== 'bossPanel' && <div className="mt-6">
                         <button
                             type="submit"
                             form={view === 'login' ? 'login-form' : 'register-form'}
@@ -193,7 +267,7 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
                         >
                             {isLoading ? 'Verificando...' : (view === 'login' ? 'Entrar' : 'Pré-Cadastrar Aluna')}
                         </button>
-                    </div>
+                    </div>}
 
                     {view === 'login' && (
                         <div className="mt-6 text-center">
