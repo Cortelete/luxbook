@@ -9,7 +9,11 @@ export const mappingSection: CourseSection = {
     { type: 'paragraph', content: '%%Mapping%% é o mapa que você desenha no protetor de pálpebras (PAD) para guiar a aplicação.' },
     { type: 'image_carousel', content: { 
         caption: 'Ilustração clara dos 3 formatos de olho com o desenho do mapping sobre eles: Boneca, Gatinho e Esquilo, mostrando a distribuição dos tamanhos.', 
-        images: ['/data/modules/04_mapping/images/designs.png'] 
+        images: [
+            'https://placehold.co/600x400/d4af37/121212?text=Design%5CnBoneca', 
+            'https://placehold.co/600x400/d4af37/121212?text=Design%5CnGatinho', 
+            'https://placehold.co/600x400/d4af37/121212?text=Design%5CnEsquilo'
+        ] 
     } },
     { type: 'list', content: [
         '**1. Boneca (Doll Eye):** Fios maiores no centro do olho. **Efeito:** %%Abre e arredonda o olhar%%.',
@@ -35,7 +39,7 @@ export const mappingSection: CourseSection = {
     ]},
      { type: 'image_carousel', content: { 
         caption: 'Espaço para Prática: Desenhe aqui os 3 tipos de mapping, distribuindo os tamanhos dos fios: Boneca: Gatinho: Esquilo:', 
-        images: ['/data/modules/04_mapping/images/pratica.png'] 
+        images: ['https://placehold.co/600x400/F9F9F9/1A1A1A?text=Desenhe+aqui...'] 
     } },
   ]
 };

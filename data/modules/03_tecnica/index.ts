@@ -13,7 +13,11 @@ export const tecnicaSection: CourseSection = {
     ]},
     { type: 'image_carousel', content: { 
         caption: 'Ilustração detalhada mostrando a acoplagem correta, a distância da pálpebra, e exemplos de erros comuns: muita cola, base solta, colada na pele.', 
-        images: ['/data/modules/03_tecnica/images/acoplagem.png'] 
+        images: [
+            'https://placehold.co/600x400/d4af37/121212?text=Acoplagem%5CnCorreta', 
+            'https://placehold.co/600x400/d4af37/121212?text=Erro:%5CnBase+Solta', 
+            'https://placehold.co/600x400/d4af37/121212?text=Erro:%5CnColado+na+Pele'
+        ] 
     } },
     { type: 'table', content: {
       headers: ['Tipo de Acoplagem', 'Descrição', 'Quando Usar'],

@@ -8,8 +8,20 @@ export interface Profile {
     email: string;
     roles: Role[];
     course_type: CourseType;
-    login_alias?: string | null;
+    login_alias: string | null;
 }
+
+export type ProfileInsert = {
+    user_id: string;
+    name: string;
+    email: string;
+    roles: Role[];
+    course_type: CourseType;
+    login_alias: string | null;
+};
+
+export type ProfileUpdate = Partial<ProfileInsert>;
+
 
 // Define o schema do banco de dados para o cliente Supabase
 export interface Database {
@@ -17,8 +29,8 @@ export interface Database {
     Tables: {
       profiles: {
         Row: Profile; // O tipo de uma linha lida do DB
-        Insert: Profile; // O tipo de uma linha a ser inserida
-        Update: Partial<Profile>; // O tipo para uma atualização de linha
+        Insert: ProfileInsert; // O tipo de uma linha a ser inserida
+        Update: ProfileUpdate; // O tipo para uma atualização de linha
       };
     };
     Functions: {}; // Pode ficar vazio se não for usado

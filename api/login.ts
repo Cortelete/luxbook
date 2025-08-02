@@ -30,76 +30,66 @@ async function getUserProfile(user: User): Promise<UserData | null> {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-    if (initError) {
-        return res.status(500).json({ message: initError });
-    }
-    // We know supabase is not null here due to the check above
-    const supabaseClient = supabase!;
-
-    if (req.method !== 'POST') {
-        res.setHeader('Allow', 'POST');
-        return res.status(405).end('Method Not Allowed');
-    }
-
-    const { identifier, password }: { identifier: string; password: string; } = req.body;
-
-    if (!identifier || !password) {
-        return res.status(400).json({ message: 'Identificador (email/alias) e senha são obrigatórios.' });
-    }
-
-    let authResponse: {
-        data: { user: User | null; session: Session | null };
-        error: any | null;
-    } | null = null;
-
-    let effectiveEmail = identifier;
-
-    // Etapa 1: Tentar fazer login com o identificador como se fosse um email
-    const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({
-        email: identifier,
-        password: password,
-    });
-
-    if (signInError) {
-        // Se falhar e o erro NÃO for de email inválido, pode ser uma senha incorreta para um alias.
-        // Vamos verificar se o identificador é um alias.
-        const { data: profile } = await supabaseClient
-            .from('profiles')
-            .select('email')
-            .eq('login_alias', identifier)
-            .single();
-
-        if (profile && profile.email) {
-            effectiveEmail = profile.email;
-            // Tentar login novamente com o email encontrado
-            const { data: retryData, error: retryError } = await supabaseClient.auth.signInWithPassword({
-                email: effectiveEmail,
-                password: password,
-            });
-
-            if (retryError) {
-                 return res.status(401).json({ message: 'ID de login ou senha inválidos.' });
-            }
-            authResponse = { data: retryData, error: retryError };
-
-        } else {
-             // Se não for encontrado um alias, o erro original de login é válido.
-             return res.status(401).json({ message: 'ID de login ou senha inválidos.' });
+    try {
+        if (initError) {
+            return res.status(500).json({ message: initError });
         }
-    } else {
-        authResponse = { data: signInData, error: signInError };
-    }
-    
-    if (!authResponse || !authResponse.data.user || !authResponse.data.session) {
-         return res.status(401).json({ message: 'ID de login ou senha inválidos.' });
-    }
+        // We know supabase is not null here due to the check above
+        const supabaseClient = supabase!;
 
-    // Etapa 2: Buscar o perfil da usuária
-    const userData = await getUserProfile(authResponse.data.user);
-    if (!userData) {
-         return res.status(404).json({ message: 'Perfil de usuária não encontrado. Contate o suporte.' });
-    }
+        if (req.method !== 'POST') {
+            res.setHeader('Allow', 'POST');
+            return res.status(405).end('Method Not Allowed');
+        }
 
-    // Etapa 3: Retornar o perfil e a sessão (que contém o token JWT)
-    return res.status(200).json({ user: userData, session: authResponse.data.session });
+        const { identifier, password }: { identifier: string; password: string; } = req.body;
+
+        if (!identifier || !password) {
+            return res.status(400).json({ message: 'Identificador (email/alias) e senha são obrigatórios.' });
+        }
+
+        // Etapa 1: Tentar fazer login
+        let signInResponse = await supabaseClient.auth.signInWithPassword({
+            email: identifier,
+            password: password,
+        });
+
+        // Se o login inicial falhar, verifique se o identificador é um alias e tente novamente.
+        if (signInResponse.error) {
+            const { data: profile } = await supabaseClient
+                .from('profiles')
+                .select('email')
+                .eq('login_alias', identifier)
+                .single();
+
+            // Se um perfil com o alias existir, tente o login com o email real.
+            if (profile?.email) {
+                signInResponse = await supabaseClient.auth.signInWithPassword({
+                    email: profile.email,
+                    password: password,
+                });
+            }
+        }
+        
+        // Após todas as tentativas, se ainda houver um erro ou não houver dados, falhe.
+        if (signInResponse.error || !signInResponse.data.user || !signInResponse.data.session) {
+            return res.status(401).json({ message: 'ID de login ou senha inválidos.' });
+        }
+        
+        // Desestruture a resposta bem-sucedida
+        const { user, session } = signInResponse.data;
+
+        // Etapa 2: Buscar o perfil da usuária
+        const userData = await getUserProfile(user);
+        if (!userData) {
+            return res.status(404).json({ message: 'Perfil de usuária não encontrado. Contate o suporte.' });
+        }
+
+        // Etapa 3: Retornar o perfil e a sessão (que contém o token JWT)
+        return res.status(200).json({ user: userData, session: session });
+
+    } catch (error) {
+        console.error('[API Login Error]: Uncaught exception', error);
+        return res.status(500).json({ message: "Ocorreu um erro inesperado no servidor." });
+    }
 }

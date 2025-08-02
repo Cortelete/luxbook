@@ -6,6 +6,17 @@ interface LoginResponse {
   session: Session;
 }
 
+const handleResponseError = async (response: Response, defaultMessage: string): Promise<never> => {
+    let errorData;
+    try {
+        errorData = await response.json();
+    } catch (e) {
+        // The response was not JSON, maybe a Vercel error page (HTML/text)
+        throw new Error(`Erro ${response.status}: Falha na comunicação com o servidor.`);
+    }
+    throw new Error(errorData.message || defaultMessage);
+};
+
 /**
  * Envia credenciais de login para o endpoint de backend seguro para verificação.
  * @param identifier O email ou ID de login da usuária.
@@ -23,11 +34,10 @@ export async function login(identifier: string, password: string): Promise<Login
         });
 
         if (response.ok) {
-            const data = await response.json();
-            return data;
+            return await response.json();
         } else {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'ID de login ou senha inválidos.');
+            await handleResponseError(response, 'ID de login ou senha inválidos.');
+            return null; // Unreachable, but satisfies TypeScript
         }
     } catch (error) {
         console.error('Erro durante a requisição de login:', error);
@@ -95,8 +105,8 @@ export async function getUsers(token: string): Promise<UserData[]> {
             const data = await response.json();
             return data.users;
         } else {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Falha ao buscar usuárias.');
+             await handleResponseError(response, 'Falha ao buscar usuárias.');
+             return []; // Unreachable
         }
     } catch (error) {
         console.error('Erro ao buscar lista de usuárias:', error);

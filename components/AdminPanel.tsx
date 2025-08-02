@@ -3,7 +3,7 @@ import { UserData, CourseSection, CourseType, Role } from '../lib/types';
 import { graduationCodes } from '../data/graduationCodes';
 import { aiChatCodes } from '../data/aiChatCodes';
 import { registerUser, getUsers } from '../services/authService';
-import { UserIcon, KeyIcon, BookOpenIcon, PencilSquareIcon, AtSymbolIcon, LockClosedIcon, AcademicCapIcon, ShieldCheckIcon, RocketIcon } from './icons';
+import { UserIcon, KeyIcon, BookOpenIcon, PencilSquareIcon, AtSymbolIcon, LockClosedIcon, AcademicCapIcon, ShieldCheckIcon, RocketIcon, MegaphoneIcon, ConstructionIcon } from './icons';
 
 type AdminTab = 'students' | 'add_student' | 'codes' | 'modules' | 'permissions' | 'messages';
 
@@ -220,6 +220,37 @@ const StudentsPanel: React.FC<{ sessionToken: string | null, currentUser: UserDa
 });
 
 
+const EditModuleForm: React.FC<{
+    section: CourseSection;
+    title: string;
+    brief: string;
+    onTitleChange: (v: string) => void;
+    onBriefChange: (v: string) => void;
+    onSave: () => void;
+    onCancel: () => void;
+}> = memo(({ section, title, brief, onTitleChange, onBriefChange, onSave, onCancel }) => {
+    return (
+        <div className="bg-light-hover dark:bg-dark-hover p-4 rounded-lg my-2 border border-gold/50 animate-fade-in-slide-up">
+            <h4 className="text-lg font-bold text-gold mb-4">Editando: {section.title}</h4>
+            <div className="space-y-4">
+                <div>
+                    <label htmlFor="edit-title" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">Título do Módulo</label>
+                    <input id="edit-title" type="text" value={title} onChange={e => onTitleChange(e.target.value)} className="w-full p-2 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-md" />
+                </div>
+                <div>
+                    <label htmlFor="edit-brief" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-1">Descrição Breve</label>
+                    <textarea id="edit-brief" value={brief} onChange={e => onBriefChange(e.target.value)} className="w-full p-2 bg-light-card dark:bg-dark-card border border-light-border dark:border-dark-border rounded-md" rows={3}></textarea>
+                </div>
+            </div>
+            <div className="flex justify-end space-x-3 mt-4">
+                <button onClick={onCancel} className="px-4 py-2 text-sm rounded-md hover:bg-light-border dark:hover:bg-dark-border transition-colors">Cancelar</button>
+                <button onClick={onSave} className="px-4 py-2 text-sm rounded-md bg-gold text-dark-bg font-semibold hover:bg-gold/90 transition-colors">Salvar Alterações</button>
+            </div>
+        </div>
+    );
+});
+
+
 interface AdminPanelProps {
     allSections: CourseSection[];
     onUpdateSection: (id: string, newTitle: string, newBrief: string) => void;
@@ -230,20 +261,28 @@ interface AdminPanelProps {
 const AdminPanel: React.FC<AdminPanelProps> = memo(({ allSections, onUpdateSection, authenticatedUser, sessionToken }) => {
     const [activeTab, setActiveTab] = useState<AdminTab>('students');
     const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
+    const [editingTitle, setEditingTitle] = useState('');
+    const [editingBrief, setEditingBrief] = useState('');
 
-    const handleSaveModule = useCallback((id: string, newTitle: string, newBrief: string) => {
-        onUpdateSection(id, newTitle, newBrief);
+    const handleEditClick = useCallback((section: CourseSection) => {
+        setEditingSectionId(section.id);
+        setEditingTitle(section.title);
+        setEditingBrief(section.brief);
+    }, []);
+
+    const handleSaveModule = useCallback((id: string) => {
+        onUpdateSection(id, editingTitle, editingBrief);
         setEditingSectionId(null);
-    }, [onUpdateSection]);
+    }, [onUpdateSection, editingTitle, editingBrief]);
     
     const handleCancelEdit = useCallback(() => setEditingSectionId(null), []);
 
-    // A simple key to force re-fetch when a user is added
     const [userListVersion, setUserListVersion] = useState(0);
     const refreshUserList = useCallback(() => setUserListVersion(v => v + 1), []);
 
     const isBoss = authenticatedUser?.roles.includes('boss') ?? false;
     const isAdmin = authenticatedUser?.roles.includes('admin') ?? false;
+    const isMentor = authenticatedUser?.roles.includes('mentor') ?? false;
 
     return (
         <div className="p-4 sm:p-6 md:p-10 animate-page-enter">
@@ -258,12 +297,23 @@ const AdminPanel: React.FC<AdminPanelProps> = memo(({ allSections, onUpdateSecti
                         <TabButton Icon={KeyIcon} label="Códigos" isActive={activeTab === 'codes'} onClick={() => setActiveTab('codes')} />
                         <TabButton Icon={BookOpenIcon} label="Módulos" isActive={activeTab === 'modules'} onClick={() => setActiveTab('modules')} />
                         <TabButton Icon={RocketIcon} label="Permissões" isActive={activeTab === 'permissions'} onClick={() => setActiveTab('permissions')} isVisible={isBoss} />
+                        <TabButton Icon={MegaphoneIcon} label="Mensagens" isActive={activeTab === 'messages'} onClick={() => setActiveTab('messages')} isVisible={isBoss || isAdmin || isMentor} />
                     </div>
 
                     <div className="p-4 md:p-6">
                         {activeTab === 'students' && <StudentsPanel key={userListVersion} sessionToken={sessionToken} currentUser={authenticatedUser} />}
                         
                         {activeTab === 'add_student' && <AddStudentPanel sessionToken={sessionToken} onUserAdded={refreshUserList} />}
+
+                        {activeTab === 'messages' && (
+                            <div className="animate-fade-in-slide-up text-center">
+                                <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Mensagens Internas</h3>
+                                <div className="bg-light-hover dark:bg-dark-hover p-6 rounded-lg border border-light-border dark:border-dark-border space-y-4">
+                                    <ConstructionIcon className="w-12 h-12 text-gold/50 mx-auto" />
+                                    <p className="text-light-text-secondary dark:text-dark-text-secondary">O sistema de mensagens internas para mentoras solicitarem alterações de conteúdo está em desenvolvimento e será implementado em breve.</p>
+                                </div>
+                            </div>
+                        )}
 
                         {activeTab === 'permissions' && isBoss && (
                              <div className="animate-fade-in-slide-up text-center">
@@ -306,14 +356,23 @@ const AdminPanel: React.FC<AdminPanelProps> = memo(({ allSections, onUpdateSecti
                                 <div className="space-y-2">
                                     {allSections.filter(s => s.id !== 'admin').map(section => (
                                         editingSectionId === section.id ? (
-                                            <div key={`${section.id}-edit`}> {/* Placeholder for edit form */} </div>
+                                            <EditModuleForm
+                                                key={`${section.id}-edit`}
+                                                section={section}
+                                                title={editingTitle}
+                                                brief={editingBrief}
+                                                onTitleChange={setEditingTitle}
+                                                onBriefChange={setEditingBrief}
+                                                onSave={() => handleSaveModule(section.id)}
+                                                onCancel={handleCancelEdit}
+                                            />
                                         ) : (
                                             <div key={section.id} className="flex justify-between items-center p-3 bg-light-hover dark:bg-dark-hover rounded-lg">
                                                 <div>
                                                     <p className="font-semibold text-light-text-primary dark:text-dark-text-primary">{section.title}</p>
                                                     <p className="text-xs text-light-text-secondary dark:text-dark-text-secondary">{section.brief}</p>
                                                 </div>
-                                                <button onClick={() => setEditingSectionId(section.id)} className="p-2 rounded-md hover:bg-gold/20 text-gold transition-colors">
+                                                <button onClick={() => handleEditClick(section)} className="p-2 rounded-md hover:bg-gold/20 text-gold transition-colors">
                                                     <PencilSquareIcon className="w-5 h-5" />
                                                 </button>
                                             </div>
