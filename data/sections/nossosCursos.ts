@@ -1,4 +1,4 @@
-import { CourseSection } from '../../api/lib/types';
+import { CourseSection } from '../../lib/types';
 
 export const nossosCursosSection: CourseSection = {
   id: 'nossosCursos',

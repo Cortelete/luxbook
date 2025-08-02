@@ -1,6 +1,6 @@
 import { CourseSection } from '../../../lib/types';
 
-export const horaDaAcaoSection: CourseSection = {
+export const actionTipsContent: CourseSection = {
   id: 'horaDaAcao',
   title: 'Hora da Ação: Transforme Conhecimento em Sucesso',
   brief: 'Dicas práticas para lançar e impulsionar sua carreira.',

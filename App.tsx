@@ -9,12 +9,13 @@ import CustomCursor from './components/CustomCursor';
 import Footer from './components/Footer';
 import Login from './components/Login';
 import AiChatGate from './components/AiChatGate';
-import { AuthenticatedUser } from './lib/types';
+import { UserData, CourseType } from './lib/types';
 import UserProfile from './components/UserProfile';
+import type { Session } from '@supabase/supabase-js';
 
 const App: React.FC = () => {
   // --- AUTHENTICATION STATE ---
-  const [authenticatedUser, setAuthenticatedUser] = useState<AuthenticatedUser | null>(() => {
+  const [authenticatedUser, setAuthenticatedUser] = useState<UserData | null>(() => {
     const storedUser = sessionStorage.getItem('authenticatedUser');
     try {
       return storedUser ? JSON.parse(storedUser) : null;
@@ -23,6 +24,16 @@ const App: React.FC = () => {
       return null;
     }
   });
+  const [session, setSession] = useState<Session | null>(() => {
+    const storedSession = sessionStorage.getItem('session');
+    try {
+      return storedSession ? JSON.parse(storedSession) : null;
+    } catch (e) {
+      console.error("Failed to parse stored session:", e);
+      return null;
+    }
+  });
+
 
   // --- FEATURE GATING STATE ---
   const [isGraduated, setGraduated] = useState<boolean>(() => sessionStorage.getItem('isGraduated') === 'true');
@@ -37,17 +48,39 @@ const App: React.FC = () => {
   const [isSidebarOpen, setSidebarOpen] = useState(false); // Mobile sidebar
   const [theme, setTheme] = useState(() => localStorage.getItem('theme') || 'dark');
   
+  const filteredSections = useMemo(() => {
+    if (!authenticatedUser) return [];
+
+    const userRoles = authenticatedUser.roles;
+    if (userRoles.includes('admin') || userRoles.includes('boss') || userRoles.includes('mentor')) {
+        return courseData; // Admins/mentors see all modules
+    }
+    
+    // Student access logic
+    const userCourse = authenticatedUser.courseType;
+    if (userCourse === 'Lash Empresária VIP') {
+        return courseData;
+    }
+    if (userCourse === 'Lash Empreendedora') {
+        return courseData.filter(s => s.id !== '16_vip'); // Filter out VIP
+    }
+    // Default to Lash Profissional
+    return courseData.filter(s => s.id !== '16_vip' && s.id !== '15_empreendedora');
+
+  }, [authenticatedUser, courseData]);
+
   const sectionsForSidebar = useMemo(() => {
-    const allSections = [...courseData];
-    if (authenticatedUser?.roles.includes('admin')) {
+    let allSections = [...filteredSections];
+    if (authenticatedUser?.roles.includes('admin') || authenticatedUser?.roles.includes('boss')) {
         const introIndex = allSections.findIndex(s => s.id === 'intro');
-        // Add admin section after 'intro' if it's not already there
-        if (!allSections.find(s => s.id === 'admin')) {
+        if (introIndex !== -1 && !allSections.find(s => s.id === 'admin')) {
             allSections.splice(introIndex + 1, 0, adminSection);
         }
+    } else {
+        allSections = allSections.filter(s => s.id !== 'admin');
     }
     return allSections;
-  }, [authenticatedUser, courseData]);
+  }, [authenticatedUser, filteredSections]);
   
   // Conditionally unlock chat based on user type or sessionStorage flag
   const isChatUnlocked = useMemo(() => {
@@ -110,21 +143,26 @@ const App: React.FC = () => {
 
   const handleAiChatUnlockSuccess = useCallback(() => {
     sessionStorage.setItem('isChatUnlocked', 'true');
-    // We don't need to set state here, as the useMemo will react
     setShowAiGate(false);
   }, []);
 
-  const handleLoginSuccess = useCallback((user: AuthenticatedUser) => {
+  const handleLoginSuccess = useCallback((user: UserData, sessionData: Session) => {
     sessionStorage.setItem('authenticatedUser', JSON.stringify(user));
+    sessionStorage.setItem('session', JSON.stringify(sessionData));
     setAuthenticatedUser(user);
+    setSession(sessionData);
+    
+    // Reset progress for new login
     sessionStorage.removeItem('isGraduated');
     sessionStorage.removeItem('isChatUnlocked');
     setGraduated(false);
+    setActiveSectionId('intro');
   }, []);
 
   const handleLogout = useCallback(() => {
     sessionStorage.clear();
     setAuthenticatedUser(null);
+    setSession(null);
     setGraduated(false);
     setActiveSectionId('intro');
   }, []);
@@ -207,6 +245,8 @@ const App: React.FC = () => {
                 isGraduated={isGraduated}
                 onGraduationSuccess={handleGraduationSuccess}
                 onUpdateSection={handleUpdateSection}
+                authenticatedUser={authenticatedUser}
+                sessionToken={session?.access_token || null}
               />
             </div>
             <Footer />

@@ -9,7 +9,8 @@ import {
 import ImageCarousel from './ImageCarousel';
 import GraduationGate from './GraduationGate';
 import AdminPanel from './AdminPanel'; // Import AdminPanel
-import { horaDaAcaoSection } from '../data/modules/11_horaDaAcao/index';
+import { actionTipsContent } from '../data/modules/11_horaDaAcao/index';
+import { UserData } from '../lib/types';
 
 const NavigationControls: React.FC<{
   section: CourseSection;
@@ -191,6 +192,8 @@ interface ContentDisplayProps {
   onNavigate: (sectionId: string) => void;
   isGraduated: boolean;
   onGraduationSuccess: () => void;
+  authenticatedUser: UserData | null;
+  sessionToken: string | null;
 }
 
 const HomePageLayout: React.FC<{section: CourseSection; allSections: CourseSection[]; onNavigate: (id: string) => void}> = memo(({ section, allSections, onNavigate }) => {
@@ -280,7 +283,7 @@ const HomePageLayout: React.FC<{section: CourseSection; allSections: CourseSecti
 
 const ActionTipsModal: React.FC<{onClose: () => void}> = memo(({ onClose }) => {
     const tipCategories = useMemo(() =>
-        horaDaAcaoSection.content
+        actionTipsContent.content
             .filter(item => item.type === 'tip_category')
             .map(item => item.content as TipCategoryData),
     []);
@@ -607,7 +610,7 @@ const AccordionPageLayout: React.FC<{section: CourseSection, activeSubSectionId?
     );
 });
 
-const ContentDisplay: React.FC<ContentDisplayProps> = memo(({ section, activeSubSectionId, onNavigate, allSections, isGraduated, onGraduationSuccess, onUpdateSection }) => {
+const ContentDisplay: React.FC<ContentDisplayProps> = memo(({ section, activeSubSectionId, onNavigate, allSections, isGraduated, onGraduationSuccess, onUpdateSection, authenticatedUser, sessionToken }) => {
   useEffect(() => {
     if (activeSubSectionId) {
       setTimeout(() => {
@@ -627,7 +630,12 @@ const ContentDisplay: React.FC<ContentDisplayProps> = memo(({ section, activeSub
 
   // --- GATE FOR ADMIN PAGE ---
   if (section.id === 'admin') {
-    return <AdminPanel allSections={allSections} onUpdateSection={onUpdateSection} />;
+    return <AdminPanel 
+              allSections={allSections} 
+              onUpdateSection={onUpdateSection}
+              authenticatedUser={authenticatedUser}
+              sessionToken={sessionToken}
+            />;
   }
 
   // Special page layouts

@@ -1,13 +1,14 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabase } from './lib/supabaseClient';
+import { supabase, initError } from './lib/supabaseClient';
 import { CourseType, Role } from '../lib/types';
-import {
-  Jwt,
-  JwtPayload,
-  decode,
-} from 'jsonwebtoken';
+import { JwtPayload, verify } from 'jsonwebtoken';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    if (initError) {
+        return res.status(500).json({ message: initError });
+    }
+    const supabaseClient = supabase!;
+
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
@@ -15,13 +16,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     // --- Aprimoramento de Segurança: Verificação de token JWT ---
     const authHeader = req.headers.authorization;
+    const jwtSecret = process.env.SUPABASE_JWT_SECRET;
+
     if (!authHeader || !authHeader.startsWith('Bearer ')) {
         return res.status(401).json({ message: 'Acesso não autorizado: token ausente.' });
     }
+    if (!jwtSecret) {
+        console.error("CRITICAL: SUPABASE_JWT_SECRET environment variable not set.");
+        return res.status(500).json({ message: "Configuração de segurança do servidor incompleta." });
+    }
+
     const token = authHeader.split(' ')[1];
 
     try {
-        const decodedToken = decode(token) as JwtPayload;
+        const decodedToken = verify(token, jwtSecret) as JwtPayload;
         const userRoles = decodedToken?.user_metadata?.roles as Role[] | undefined;
 
         if (!userRoles || (!userRoles.includes('admin') && !userRoles.includes('boss'))) {
@@ -52,7 +60,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Etapa 1: Criar a usuária no Supabase Auth
-    const { data: authData, error: authError } = await supabase.auth.admin.createUser({
+    const { data: authData, error: authError } = await supabaseClient.auth.admin.createUser({
         email: email,
         password: password,
         email_confirm: true,
@@ -71,16 +79,16 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     // Etapa 2: Criar o perfil correspondente na tabela 'profiles'.
-    const { error: profileError } = await supabase
+    const { error: profileError } = await supabaseClient
         .from('profiles')
-        .insert([{
+        .insert({
             user_id: authData.user.id,
             name: profileName,
             email: email, // Store email here for easier lookup if needed
             roles: roles,
             course_type: courseType,
             login_alias: loginAlias || null,
-        }]);
+        });
 
     if (profileError) {
         console.error('Erro na criação do perfil no Supabase:', profileError.message);
@@ -88,7 +96,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
             ? `O ID de Login "${loginAlias}" já está em uso.`
             : `Falha ao criar perfil: ${profileError.message}`;
 
-        await supabase.auth.admin.deleteUser(authData.user.id);
+        await supabaseClient.auth.admin.deleteUser(authData.user.id);
         return res.status(500).json({ message: errorMessage });
     }
 

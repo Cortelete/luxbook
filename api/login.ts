@@ -1,10 +1,12 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { supabase } from './lib/supabaseClient';
-import { UserData, CourseType, Role } from '../lib/types';
+import { supabase, initError } from './lib/supabaseClient';
+import { UserData, CourseType } from '../lib/types';
 import type { User, Session } from '@supabase/supabase-js';
 
 // Função auxiliar para buscar o perfil e construir o objeto UserData
 async function getUserProfile(user: User): Promise<UserData | null> {
+    if (!supabase) return null; // Should not happen due to initError check
+
     const { data: profileData, error: profileError } = await supabase
         .from('profiles')
         .select('*')
@@ -28,6 +30,12 @@ async function getUserProfile(user: User): Promise<UserData | null> {
 }
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+    if (initError) {
+        return res.status(500).json({ message: initError });
+    }
+    // We know supabase is not null here due to the check above
+    const supabaseClient = supabase!;
+
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
@@ -39,11 +47,15 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(400).json({ message: 'Identificador (email/alias) e senha são obrigatórios.' });
     }
 
-    let authResponse: { data: { user: User; session: Session; } | null, error: Error | null } | null = null;
+    let authResponse: {
+        data: { user: User | null; session: Session | null };
+        error: any | null;
+    } | null = null;
+
     let effectiveEmail = identifier;
 
     // Etapa 1: Tentar fazer login com o identificador como se fosse um email
-    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
+    const { data: signInData, error: signInError } = await supabaseClient.auth.signInWithPassword({
         email: identifier,
         password: password,
     });
@@ -51,7 +63,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (signInError) {
         // Se falhar e o erro NÃO for de email inválido, pode ser uma senha incorreta para um alias.
         // Vamos verificar se o identificador é um alias.
-        const { data: profile } = await supabase
+        const { data: profile } = await supabaseClient
             .from('profiles')
             .select('email')
             .eq('login_alias', identifier)
@@ -60,7 +72,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         if (profile && profile.email) {
             effectiveEmail = profile.email;
             // Tentar login novamente com o email encontrado
-            const { data: retryData, error: retryError } = await supabase.auth.signInWithPassword({
+            const { data: retryData, error: retryError } = await supabaseClient.auth.signInWithPassword({
                 email: effectiveEmail,
                 password: password,
             });
@@ -78,7 +90,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         authResponse = { data: signInData, error: signInError };
     }
     
-    if (!authResponse.data?.user || !authResponse.data.session) {
+    if (!authResponse || !authResponse.data.user || !authResponse.data.session) {
          return res.status(401).json({ message: 'ID de login ou senha inválidos.' });
     }
 

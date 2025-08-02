@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, memo } from 'react';
-import { CourseSection, AuthenticatedUser } from '../lib/types';
+import { CourseSection, UserData } from '../lib/types';
 import { CloseIcon, HomeIcon, MailIcon, BookOpenIcon, RocketIcon, AcademicCapIcon, SparklesIcon, ChevronDoubleLeftIcon, LogoutIcon, UserIcon, LockClosedIcon, ShieldCheckIcon } from './icons';
 
 interface SidebarProps {
@@ -10,7 +10,7 @@ interface SidebarProps {
   onClose: () => void;
   isCollapsed: boolean;
   onLogout: () => void;
-  authenticatedUser: AuthenticatedUser | null;
+  authenticatedUser: UserData | null;
   isGraduated: boolean;
   onOpenProfile: () => void;
 }
@@ -41,12 +41,12 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
 
   const navOrder = ['intro', 'admin', 'horaDaAcao', 'nossosCursos', 'contato'];
   const introLink = sections.find(s => s.id === 'intro');
-  const adminLink = authenticatedUser?.roles.includes('admin') ? sections.find(s => s.id === 'admin') : null;
+  const adminLink = authenticatedUser?.roles.some(r => ['admin', 'boss'].includes(r)) ? sections.find(s => s.id === 'admin') : null;
   
   const otherMainLinks = sections
       .filter(s => ['nossosCursos', 'horaDaAcao', 'contato'].includes(s.id))
       .sort((a, b) => navOrder.indexOf(a.id) - navOrder.indexOf(b.id));
-  const courseModules = sections.filter(s => !navOrder.includes(s.id));
+  const courseModules = sections.filter(s => !navOrder.includes(s.id) && s.id !== 'admin');
 
   const getIcon = (id: string, className: string) => {
     switch (id) {
@@ -66,7 +66,7 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
     return title;
   }
   
-  const formatRoles = (roles: AuthenticatedUser['roles']): string => {
+  const formatRoles = (roles: UserData['roles']): string => {
     const roleHierarchy = ['boss', 'admin', 'mentor', 'student'];
     return roles
       .sort((a, b) => roleHierarchy.indexOf(a) - roleHierarchy.indexOf(b))
@@ -176,9 +176,9 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
                   >
                       <UserIcon className="w-8 h-8 text-gold flex-shrink-0"/>
                       {!isCollapsed && (
-                          <div className="ml-3">
+                          <div className="ml-3 overflow-hidden">
                               <p className="text-sm font-semibold text-light-text-primary dark:text-dark-text-primary truncate">{authenticatedUser.name}</p>
-                              <p className={`text-xs ${authenticatedUser.roles.includes('admin') || authenticatedUser.roles.includes('mentor') ? 'text-gold font-bold' : 'text-light-text-secondary dark:text-dark-text-secondary'}`}>
+                              <p className={`text-xs ${authenticatedUser.roles.includes('admin') || authenticatedUser.roles.includes('boss') ? 'text-gold font-bold' : 'text-light-text-secondary dark:text-dark-text-secondary'}`}>
                                  {formatRoles(authenticatedUser.roles)}
                               </p>
                           </div>

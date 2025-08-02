@@ -1,15 +1,7 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 import { CourseType, Role } from '../../lib/types';
 
-// Estas variáveis de ambiente devem ser definidas nas configurações do seu projeto Vercel.
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-
-if (!supabaseUrl || !supabaseKey) {
-    throw new Error("A URL do Supabase e a Chave de Serviço (Service Role Key) devem ser definidas nas variáveis de ambiente.");
-}
-
-// Define a estrutura para uma linha da tabela 'profiles'
+// Define a structure for a linha da tabela 'profiles'
 export interface Profile {
     user_id: string;
     name: string;
@@ -34,9 +26,16 @@ export interface Database {
   };
 }
 
-// Cria um cliente único e compartilhado para todas as funções serverless
-// Usando a chave de serviço para operações de administrador (como criar usuários)
-export const supabase = createClient<Database>(supabaseUrl, supabaseKey, {
+
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+
+export const initError = (!supabaseUrl || !supabaseKey)
+    ? "Variáveis de ambiente do Supabase (URL e Service Role Key) não foram configuradas no servidor."
+    : null;
+
+// The client will be null if there's an error, which is checked by the initError flag in API handlers.
+export const supabase = initError ? null : createClient<Database>(supabaseUrl!, supabaseKey!, {
     auth: {
         autoRefreshToken: false,
         persistSession: false,

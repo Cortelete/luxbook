@@ -14,6 +14,8 @@ import { remocaoSection } from './modules/10_remocao/index';
 import { nossosCursosSection } from './modules/12_nossosCursos/index';
 import { horaDaAcaoSection } from './modules/13_fim/index';
 import { contatoSection } from './modules/14_contato/index';
+import { empreendedoraSection } from './modules/15_empreendedora';
+import { vipSection } from './modules/16_vip';
 
 export const courseData: CourseSection[] = [
   introSection,
@@ -26,6 +28,8 @@ export const courseData: CourseSection[] = [
   aplicacaoSection,
   manutencaoSection,
   remocaoSection,
+  empreendedoraSection,
+  vipSection,
   horaDaAcaoSection, // Graduation Gate leads here
   nossosCursosSection,
   contatoSection
