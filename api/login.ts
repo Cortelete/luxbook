@@ -38,8 +38,8 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(500).json({ message: 'Erro de configuração do servidor para este usuário.' });
     }
 
-    // 4. Compare the provided password with the one from environment variables
-    if (password.trim() === correctPassword) {
+    // 4. Compare the provided password with the one from environment variables, trimming both.
+    if (password.trim() === correctPassword.trim()) {
         // SUCCESS: Passwords match. Return the user data.
         return res.status(200).json({ user: userCredential.data });
     } else {
