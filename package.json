@@ -5,7 +5,7 @@
   "description": "Project configuration for Vercel deployment.",
   "scripts": {
     "dev": "echo \"This command is a placeholder. Run index.html in a local server for frontend development.\"",
-    "build": "echo \"No frontend build step needed. Vercel will build serverless functions automatically.\""
+    "build": "mkdir -p public && cp -r App.tsx components data index.html index.tsx metadata.json services types.ts public/"
   },
   "dependencies": {
     "@google/genai": "^1.10.0"
