@@ -1,11 +1,10 @@
-import { userCredentials } from '../lib/credentials';
 import { UserData, CourseType } from '../lib/types';
 
 /**
- * Sends login credentials to a secure backend endpoint for verification.
- * @param username The username entered by the user.
- * @param password The password entered by the user.
- * @returns A Promise that resolves to the UserData object if credentials are valid, otherwise null.
+ * Envia credenciais de login para o endpoint de backend seguro para verificação.
+ * @param username O email da usuária.
+ * @param password A senha da usuária.
+ * @returns Uma Promise que resolve para o objeto UserData se as credenciais forem válidas, caso contrário, null.
  */
 export async function login(username: string, password: string): Promise<UserData | null> {
     try {
@@ -21,74 +20,48 @@ export async function login(username: string, password: string): Promise<UserDat
             const data = await response.json();
             return data.user;
         } else {
-            // The API will send back specific error messages
             const errorData = await response.json();
-            console.error('Login failed:', errorData.message);
-            return null;
+            // Lançar o erro para que o componente de login possa capturá-lo
+            throw new Error(errorData.message || 'ID de login ou senha inválidos.');
         }
     } catch (error) {
-        console.error('Error during login fetch:', error);
-        return null;
+        console.error('Erro durante a requisição de login:', error);
+        // Repassar o erro
+        throw error;
     }
 }
 
-interface RegistrationResult {
-    success: boolean;
-    message: string;
+
+interface RegistrationData {
+    profileName: string;
+    loginId: string;
+    password: string;
+    courseType: CourseType;
 }
 
 /**
- * Pre-validates new user data and provides instructions for the admin.
- * This function does NOT create the user; it serves as a secure helper for the admin.
- * @param profileName The desired display name for the user.
- * @param loginId The desired login ID for the user.
- * @param password The user's password.
- * @param courseType The user's course type.
- * @returns An object indicating success or failure with a corresponding message.
+ * Envia os dados de uma nova usuária para o endpoint de backend seguro para criação.
+ * Destinado ao uso pelo administrador.
+ * @param data As informações da nova usuária.
+ * @returns Um objeto indicando sucesso ou falha com uma mensagem correspondente.
  */
-export function prepareRegistration(profileName: string, loginId: string, password: string, courseType: CourseType): RegistrationResult {
-    const sanitizedLoginId = loginId.toLowerCase().trim();
+export async function registerUser(data: RegistrationData): Promise<{ success: boolean; message: string; }> {
+    try {
+        const response = await fetch('/api/register', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data),
+        });
 
-    if (!profileName || !sanitizedLoginId || !password) {
-         return { success: false, message: 'Todos os campos são obrigatórios.' };
+        const result = await response.json();
+
+        if (response.ok) {
+            return { success: true, message: result.message };
+        } else {
+            return { success: false, message: result.message || 'Falha ao registrar usuária.' };
+        }
+    } catch (error) {
+        console.error('Erro de conexão ao tentar registrar:', error);
+        return { success: false, message: 'Erro de conexão ao tentar registrar. Verifique a internet e tente novamente.' };
     }
-
-    if (userCredentials.has(sanitizedLoginId)) {
-        return { success: false, message: 'Este ID de login já está em uso. Por favor, escolha outro.' };
-    }
-    
-    const newUserObjectString = `
-['${sanitizedLoginId}', {
-  data: { 
-    name: '${profileName.trim()}', 
-    roles: ['student'],
-    loginId: '${sanitizedLoginId}',
-    courseType: '${courseType}'
-  } 
-}]`;
-
-    const envVarName = `PASSWORD_${sanitizedLoginId.toUpperCase()}`;
-
-    const successMessage = `
-        <div class="text-left text-sm space-y-4">
-            <p class="font-bold text-green-400">✅ Pré-Cadastro validado com sucesso!</p>
-            <p>Para finalizar, siga os 2 passos seguintes:</p>
-            <div>
-                <strong class="text-white">1. Edite o arquivo do código:</strong>
-                <p>Copie o bloco de código abaixo e cole dentro do Map no arquivo <code class="bg-gray-700 p-1 rounded text-gold">lib/credentials.ts</code>.</p>
-                <pre class="bg-gray-800 text-xs p-3 rounded-lg mt-2 overflow-x-auto"><code>${newUserObjectString}</code></pre>
-            </div>
-            <div>
-                <strong class="text-white">2. Crie a Senha na Vercel:</strong>
-                <p>Vá para o painel do seu projeto na Vercel, navegue até "Settings" > "Environment Variables" e adicione uma nova variável:</p>
-                <ul class="list-disc list-inside ml-4 mt-2">
-                    <li><strong>Nome:</strong> <code class="bg-gray-700 p-1 rounded text-gold">${envVarName}</code></li>
-                    <li><strong>Valor:</strong> <code class="bg-gray-700 p-1 rounded text-gold">${password}</code></li>
-                </ul>
-                <p class="mt-2">Após salvar, faça o deploy novamente para aplicar as alterações.</p>
-            </div>
-        </div>
-    `;
-
-    return { success: true, message: successMessage };
 }

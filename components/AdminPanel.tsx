@@ -1,5 +1,4 @@
 import React, { useState, useEffect, memo, useCallback } from 'react';
-import { userCredentials } from '../lib/credentials';
 import { UserData, CourseSection, AuthenticatedUser, Role } from '../lib/types';
 import { graduationCodes } from '../data/graduationCodes';
 import { aiChatCodes } from '../data/aiChatCodes';
@@ -63,15 +62,7 @@ const EditModuleForm: React.FC<{ section: CourseSection, onSave: (id: string, ne
 
 const AdminPanel: React.FC<{ allSections: CourseSection[], onUpdateSection: (id: string, newTitle: string, newBrief: string) => void }> = memo(({ allSections, onUpdateSection }) => {
     const [activeTab, setActiveTab] = useState<AdminTab>('students');
-    const [users, setUsers] = useState<[string, AuthenticatedUser][]>([]);
     const [editingSectionId, setEditingSectionId] = useState<string | null>(null);
-
-    useEffect(() => {
-        // Here we'd typically fetch users, but for now we read from the local map
-        const userList = Array.from(userCredentials.entries())
-            .map(([key, value]) => [key, value.data] as [string, AuthenticatedUser]);
-        setUsers(userList);
-    }, []);
 
     const handleSaveModule = useCallback((id: string, newTitle: string, newBrief: string) => {
         onUpdateSection(id, newTitle, newBrief);
@@ -81,36 +72,15 @@ const AdminPanel: React.FC<{ allSections: CourseSection[], onUpdateSection: (id:
     const handleCancelEdit = useCallback(() => setEditingSectionId(null), []);
     const handleSetEditingId = useCallback((id: string) => setEditingSectionId(id), []);
 
-    const formatRoles = (roles: Role[]): string => {
-        const roleHierarchy = ['boss', 'admin', 'mentor', 'student'];
-        return roles
-          .sort((a, b) => roleHierarchy.indexOf(a) - roleHierarchy.indexOf(b))
-          .map(role => role.charAt(0).toUpperCase() + role.slice(1))
-          .join(', ');
-    }
-
-    const getCourseTypePill = (courseType: AuthenticatedUser['courseType']) => {
-        const baseClasses = 'px-2 py-0.5 text-xs font-semibold rounded-full inline-block';
-        switch (courseType) {
-            case 'Lash Empresária VIP':
-                return <span className={`${baseClasses} bg-gold/20 text-gold border border-gold/30`}>{courseType}</span>;
-            case 'Lash Empreendedora':
-                return <span className={`${baseClasses} bg-purple-500/20 text-purple-400`}>{courseType}</span>;
-            case 'Lash Profissional':
-            default:
-                return <span className={`${baseClasses} bg-gray-500/20 text-gray-300`}>{courseType}</span>;
-        }
-    };
-
     return (
         <div className="p-4 sm:p-6 md:p-10 animate-page-enter">
             <div className="max-w-5xl mx-auto">
                 <h1 className="text-4xl md:text-5xl font-bold text-gold mb-2">Painel de Administração</h1>
-                <p className="text-lg text-light-text-secondary dark:text-dark-text-secondary mb-8">Gerencie alunas, códigos e o conteúdo do curso.</p>
+                <p className="text-lg text-light-text-secondary dark:text-dark-text-secondary mb-8">Gerencie alunas, códigos de acesso e o conteúdo dos módulos.</p>
 
                 <div className="bg-light-card dark:bg-dark-card rounded-lg shadow-lg border border-light-border dark:border-dark-border">
                     <div className="flex border-b border-light-border dark:border-dark-border">
-                        <TabButton Icon={UserIcon} label="Usuárias" isActive={activeTab === 'students'} onClick={() => setActiveTab('students')} />
+                        <TabButton Icon={UserIcon} label="Alunas" isActive={activeTab === 'students'} onClick={() => setActiveTab('students')} />
                         <TabButton Icon={KeyIcon} label="Códigos" isActive={activeTab === 'codes'} onClick={() => setActiveTab('codes')} />
                         <TabButton Icon={BookOpenIcon} label="Módulos" isActive={activeTab === 'modules'} onClick={() => setActiveTab('modules')} />
                     </div>
@@ -118,32 +88,13 @@ const AdminPanel: React.FC<{ allSections: CourseSection[], onUpdateSection: (id:
                     <div className="p-4 md:p-6">
                         {activeTab === 'students' && (
                             <div className="animate-fade-in-slide-up">
-                                <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Usuárias Cadastradas ({users.length})</h3>
-                                <div className="overflow-x-auto">
-                                    <table className="min-w-full">
-                                        <thead className="text-left text-sm text-light-text-secondary dark:text-dark-text-secondary">
-                                            <tr>
-                                                <th className="p-2">Nome</th>
-                                                <th className="p-2">Cargo</th>
-                                                <th className="p-2">ID de Login</th>
-                                                <th className="p-2">Tipo de Curso</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {users.map(([loginId, userData]) => (
-                                                <tr key={loginId} className="border-t border-light-border dark:border-dark-border">
-                                                    <td className="p-3 font-semibold">{userData.name}</td>
-                                                    <td className="p-3">
-                                                      <span className={`text-xs font-bold ${userData.roles.includes('admin') || userData.roles.includes('mentor') ? 'text-gold' : 'text-light-text-secondary dark:text-dark-text-secondary'}`}>
-                                                        {formatRoles(userData.roles)}
-                                                      </span>
-                                                    </td>
-                                                    <td className="p-3 font-mono text-light-text-secondary dark:text-dark-text-secondary">{userData.loginId}</td>
-                                                    <td className="p-3">{getCourseTypePill(userData.courseType)}</td>
-                                                </tr>
-                                            ))}
-                                        </tbody>
-                                    </table>
+                                <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Gerenciar Alunas</h3>
+                                <div className="bg-light-hover dark:bg-dark-hover p-6 rounded-lg border border-light-border dark:border-dark-border space-y-4 text-center">
+                                  <p className="text-light-text-secondary dark:text-dark-text-secondary">O gerenciamento de alunas (visualizar, editar cargos, deletar) agora é feito diretamente no seu painel da Supabase para maior segurança e controle.</p>
+                                  <p className="text-sm text-light-text-secondary dark:text-dark-text-secondary">Para adicionar novas alunas, use a opção "Acesso Restrito" na tela de login.</p>
+                                   <a href="https://app.supabase.com" target="_blank" rel="noopener noreferrer" className="mt-2 inline-block px-6 py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition-all">
+                                        Acessar Painel Supabase
+                                   </a>
                                 </div>
                             </div>
                         )}

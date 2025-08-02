@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useCallback, memo } from 'react';
-import { login, prepareRegistration } from '../services/authService';
+import { login, registerUser } from '../services/authService';
 import { UserIcon, LockClosedIcon, ShieldCheckIcon, CloseIcon, AcademicCapIcon, RocketIcon } from './icons';
 import { UserData, CourseType } from '../lib/types';
 
@@ -30,8 +30,9 @@ const AdminGateModal: React.FC<{ onClose: () => void, onAdminSuccess: () => void
     const [accessCode, setAccessCode] = useState('');
     const [error, setError] = useState('');
     
+    // Códigos de acesso locais para abrir os painéis. NÃO são senhas de usuário.
     const ADMIN_CODE = 'luxadmin24';
-    const BOSS_CODE = '4224';
+    const BOSS_CODE = 'i4rt3i4';
 
     const handleAccessSubmit = (e: FormEvent) => {
         e.preventDefault();
@@ -45,7 +46,6 @@ const AdminGateModal: React.FC<{ onClose: () => void, onAdminSuccess: () => void
         } else if (accessType === 'boss') {
             if (accessCode.trim() === BOSS_CODE) {
                 onBossSuccess();
-                setError('Painel Boss em desenvolvimento.'); // Placeholder
             } else {
                 setError('Código de Boss inválido.');
             }
@@ -64,15 +64,15 @@ const AdminGateModal: React.FC<{ onClose: () => void, onAdminSuccess: () => void
                         <button onClick={() => setAccessType('admin')} className="w-full text-left flex items-center space-x-4 p-4 bg-dark-hover rounded-lg hover:border-gold border border-transparent transition-all">
                             <ShieldCheckIcon className="w-8 h-8 text-gold"/>
                             <div>
-                                <p className="font-bold text-white">Acesso Admin</p>
-                                <p className="text-sm text-dark-text-secondary">Cadastrar novas alunas.</p>
+                                <p className="font-bold text-white">Cadastrar Aluna</p>
+                                <p className="text-sm text-dark-text-secondary">Criar um novo acesso de aluna.</p>
                             </div>
                         </button>
                         <button onClick={() => setAccessType('boss')} className="w-full text-left flex items-center space-x-4 p-4 bg-dark-hover rounded-lg hover:border-gold border border-transparent transition-all">
                             <RocketIcon className="w-8 h-8 text-red-500"/>
                             <div>
                                 <p className="font-bold text-white">Acesso Boss</p>
-                                <p className="text-sm text-dark-text-secondary">Gerenciar cargos e permissões.</p>
+                                <p className="text-sm text-dark-text-secondary">Gerenciamento avançado de sistema.</p>
                             </div>
                         </button>
                     </div>
@@ -130,36 +130,53 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
             if (userData) {
                 onLoginSuccess(userData);
             } else {
+                 // A função de login agora lança um erro, então isso é um fallback
                 setError('ID de login ou senha inválidos.');
             }
-        } catch (err) {
-            setError('Ocorreu um erro ao tentar fazer login.');
+        } catch (err: any) {
+            setError(err.message || 'Ocorreu um erro ao tentar fazer login.');
             console.error(err);
         } finally {
             setIsLoading(false);
         }
     }, [loginId, loginPassword, onLoginSuccess]);
 
-    const handleRegisterSubmit = useCallback((e: FormEvent) => {
+    const handleRegisterSubmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
         setError('');
         setSuccessMessage('');
+
+        // Validação de senha no frontend
+        if (registerPassword.length < 6 || !/\d/.test(registerPassword)) {
+            setError('A senha deve ter no mínimo 6 caracteres e incluir um número.');
+            return;
+        }
+
         setIsLoading(true);
 
-        setTimeout(() => {
-            const result = prepareRegistration(profileName, registerId, registerPassword, courseType);
+        try {
+            const result = await registerUser({
+                profileName,
+                loginId: registerId,
+                password: registerPassword,
+                courseType,
+            });
+
             if (result.success) {
-                // Display the instructions for the admin
                 setSuccessMessage(result.message);
-                // Reset form fields
+                // Limpar campos após o sucesso
                 setProfileName('');
                 setRegisterId('');
                 setRegisterPassword('');
             } else {
                 setError(result.message);
             }
+        } catch (err) {
+            setError('Ocorreu um erro ao tentar registrar.');
+            console.error(err);
+        } finally {
             setIsLoading(false);
-        }, 300);
+        }
     }, [profileName, registerId, registerPassword, courseType]);
 
     const onAdminSuccess = useCallback(() => {
@@ -176,12 +193,20 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         setSuccessMessage('');
     }, []);
 
+    const resetView = useCallback(() => {
+        setView('login');
+        setError('');
+        setSuccessMessage('');
+        setProfileName('');
+        setRegisterId('');
+        setRegisterPassword('');
+    }, []);
 
     const loginView = (
         <form id="login-form" onSubmit={handleLoginSubmit} className="space-y-6">
             <div>
-                <label htmlFor="loginId" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">ID de Login</label>
-                <InputField id="loginId" type="text" value={loginId} onChange={setLoginId} placeholder="Insira seu ID" Icon={UserIcon}/>
+                <label htmlFor="loginId" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">ID de Login (Email)</label>
+                <InputField id="loginId" type="email" value={loginId} onChange={setLoginId} placeholder="Insira seu email" Icon={UserIcon}/>
             </div>
             <div>
                 <label htmlFor="loginPassword"className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Senha</label>
@@ -192,10 +217,10 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
 
     const registerView = (
         <form id="register-form" onSubmit={handleRegisterSubmit} className="space-y-4">
-            <button type="button" onClick={() => setView('login')} className="text-sm text-gold hover:underline font-semibold mb-4">&larr; Voltar para Login</button>
-            <h3 className="text-xl font-bold text-center text-white pb-2">Pré-Cadastro de Aluna</h3>
+            <button type="button" onClick={resetView} className="text-sm text-gold hover:underline font-semibold mb-4">&larr; Voltar para Login</button>
+            <h3 className="text-xl font-bold text-center text-white pb-2">Cadastro de Nova Aluna</h3>
             <InputField id="profileName" type="text" value={profileName} onChange={setProfileName} placeholder="Nome Completo da Aluna" Icon={UserIcon} />
-            <InputField id="registerId" type="text" value={registerId} onChange={setRegisterId} placeholder="ID de Login (ex: nome.sobrenome)" Icon={UserIcon} />
+            <InputField id="registerId" type="email" value={registerId} onChange={setRegisterId} placeholder="ID de Login (email da aluna)" Icon={UserIcon} />
             <InputField id="registerPassword" type="text" value={registerPassword} onChange={setRegisterPassword} placeholder="Defina a Senha" Icon={LockClosedIcon} />
             <div className="relative">
                 <span className="absolute inset-y-0 left-0 flex items-center pl-3">
@@ -216,10 +241,13 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
     );
     
     const bossPanelView = (
-        <div>
-             <button type="button" onClick={() => setView('login')} className="text-sm text-gold hover:underline font-semibold mb-4">&larr; Voltar para Login</button>
-            <h3 className="text-xl font-bold text-center text-white pb-2">Painel de Cargos (Boss)</h3>
-            <p className="text-center text-dark-text-secondary">Em desenvolvimento. Aqui você poderá editar os cargos das usuárias.</p>
+        <div className="text-center">
+             <button type="button" onClick={resetView} className="text-sm text-gold hover:underline font-semibold mb-4">&larr; Voltar para Login</button>
+            <h3 className="text-xl font-bold text-white pb-2">Painel Boss</h3>
+            <p className="text-dark-text-secondary text-sm">O gerenciamento avançado de cargos e permissões de usuárias é feito diretamente no seu painel da Supabase para máxima segurança.</p>
+             <a href="https://app.supabase.com" target="_blank" rel="noopener noreferrer" className="mt-4 inline-block w-full py-2 bg-green-600 text-white font-bold rounded-lg hover:bg-green-500 transition-all">
+                Acessar Supabase
+             </a>
         </div>
     );
 
@@ -236,7 +264,7 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
          switch (view) {
             case 'login': return 'Acesso exclusivo para alunas';
             case 'register': return 'Ferramenta de Cadastro Admin';
-            case 'bossPanel': return 'Gerenciador de Cargos';
+            case 'bossPanel': return 'Gerenciador de Sistema';
             default: return 'Acesso exclusivo para alunas';
         }
     }
@@ -256,7 +284,8 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
                     {currentViewContent()}
                     
                     {error && <p className="mt-4 text-sm text-red-500 text-center">{error}</p>}
-                    {successMessage && <div className="mt-4" dangerouslySetInnerHTML={{ __html: successMessage }} />}
+                    {successMessage && <p className="mt-4 text-sm text-green-400 text-center">{successMessage}</p>}
+
 
                     {view !== 'bossPanel' && <div className="mt-6">
                         <button
@@ -265,7 +294,7 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
                             disabled={isLoading}
                             className="w-full flex justify-center py-3 px-4 bg-gold text-dark-bg font-bold rounded-lg shadow-lg hover:bg-gold/90 focus:outline-none focus:ring-4 focus:ring-yellow-500/50 transition-all transform hover:scale-105 disabled:bg-gold/50 disabled:cursor-not-allowed"
                         >
-                            {isLoading ? 'Verificando...' : (view === 'login' ? 'Entrar' : 'Pré-Cadastrar Aluna')}
+                            {isLoading ? 'Aguarde...' : (view === 'login' ? 'Entrar' : 'Cadastrar Aluna')}
                         </button>
                     </div>}
 

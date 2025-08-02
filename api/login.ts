@@ -1,49 +1,51 @@
-
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { userCredentials } from '../lib/credentials';
+import { supabase } from './lib/supabaseClient';
+import { UserData, CourseType } from '../lib/types';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
     }
 
-    if (!req.body) {
-        return res.status(400).json({ message: 'Corpo da requisição ausente.' });
-    }
-
     const { loginId, password } = req.body;
 
-    // Add strict validation to ensure inputs are strings before using string methods.
-    // This prevents a server crash if the request body is malformed.
-    if (typeof loginId !== 'string' || typeof password !== 'string') {
-        return res.status(400).json({ message: 'ID de login e senha são obrigatórios e devem ser strings.' });
+    if (typeof loginId !== 'string' || typeof password !== 'string' || !loginId || !password) {
+        return res.status(400).json({ message: 'ID de login (email) e senha são obrigatórios.' });
     }
 
-    const sanitizedLoginId = loginId.toLowerCase().trim();
-    const userCredential = userCredentials.get(sanitizedLoginId);
+    // Etapa 1: Autenticar a usuária com o Supabase Auth
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
+        email: loginId,
+        password: password,
+    });
 
-    // 1. Check if user exists in our data file
-    if (!userCredential) {
-        return res.status(404).json({ message: 'Usuário não encontrado.' });
+    if (authError || !authData.user) {
+        console.error('Erro de autenticação Supabase:', authError?.message);
+        return res.status(401).json({ message: 'ID de login ou senha inválidos.' });
     }
 
-    // 2. Construct the environment variable key from the loginId
-    const passwordEnvVarKey = `PASSWORD_${sanitizedLoginId.toUpperCase()}`;
-    const correctPassword = process.env[passwordEnvVarKey];
+    // Etapa 2: Buscar o perfil da usuária na tabela 'profiles'.
+    // Esta tabela contém os dados customizados como cargos e tipo de curso.
+    const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', authData.user.id)
+        .single();
     
-    // 3. Check if the password variable is set on the server
-    if (!correctPassword) {
-        console.error(`Vercel Serverless: Variável de ambiente de senha ${passwordEnvVarKey} não encontrada para o usuário ${sanitizedLoginId}.`);
-        return res.status(500).json({ message: 'Erro de configuração do servidor para este usuário.' });
+    if (profileError || !profileData) {
+        console.error('Erro ao buscar perfil no Supabase:', profileError?.message);
+        // Isso indica um problema de integridade de dados (usuária de auth existe, mas o perfil não).
+        return res.status(404).json({ message: 'Perfil de usuária não encontrado. Contate o suporte.' });
     }
 
-    // 4. Compare the provided password with the one from environment variables, trimming both.
-    if (password.trim() === correctPassword.trim()) {
-        // SUCCESS: Passwords match. Return the user data.
-        return res.status(200).json({ user: userCredential.data });
-    } else {
-        // FAILURE: Passwords do not match.
-        return res.status(401).json({ message: 'Senha incorreta.' });
-    }
+    // Etapa 3: Construir o objeto UserData para enviar de volta ao frontend.
+    const userData: UserData = {
+        name: profileData.name,
+        roles: profileData.roles || ['student'], // Padrão para 'student' se os cargos não estiverem definidos
+        loginId: authData.user.email!,
+        courseType: profileData.course_type as CourseType,
+    };
+
+    return res.status(200).json({ user: userData });
 }
