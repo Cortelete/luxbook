@@ -1,4 +1,4 @@
-import { CourseSection } from './lib/types';
+import { CourseSection } from '../lib/types';
 
 import { introSection } from './modules/01_intro/index';
 import { fundamentosSection } from './modules/02_fundamentos/index';
@@ -10,14 +10,13 @@ import { kitSection } from './modules/07_kit/index';
 import { aplicacaoSection } from './modules/08_aplicacao/index';
 import { manutencaoSection } from './modules/09_manutencao/index';
 import { remocaoSection } from './modules/10_remocao/index';
+// Módulo 11 (horaDaAcao) é usado para o modal de dicas e não entra na navegação principal.
 import { nossosCursosSection } from './modules/12_nossosCursos/index';
 import { horaDaAcaoSection } from './modules/13_fim/index';
 import { contatoSection } from './modules/14_contato/index';
-import { adminSection } from './adminContent';
 
 export const courseData: CourseSection[] = [
   introSection,
-  adminSection, // Included for access, but filtered in UI
   fundamentosSection,
   tecnicaSection,
   mappingSection,
@@ -27,7 +26,7 @@ export const courseData: CourseSection[] = [
   aplicacaoSection,
   manutencaoSection,
   remocaoSection,
-  horaDaAcaoSection,
+  horaDaAcaoSection, // Graduation Gate leads here
   nossosCursosSection,
   contatoSection
 ];

@@ -1,5 +1,11 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { supabase } from './lib/supabaseClient';
+import { CourseType, Role } from '../lib/types';
+import {
+  Jwt,
+  JwtPayload,
+  decode,
+} from 'jsonwebtoken';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     if (req.method !== 'POST') {
@@ -7,24 +13,53 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         return res.status(405).end('Method Not Allowed');
     }
 
-    const { profileName, loginId, password, courseType } = req.body;
+    // --- Aprimoramento de Segurança: Verificação de token JWT ---
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith('Bearer ')) {
+        return res.status(401).json({ message: 'Acesso não autorizado: token ausente.' });
+    }
+    const token = authHeader.split(' ')[1];
 
-    if (!profileName || !loginId || !password || !courseType) {
-        return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+    try {
+        const decodedToken = decode(token) as JwtPayload;
+        const userRoles = decodedToken?.user_metadata?.roles as Role[] | undefined;
+
+        if (!userRoles || (!userRoles.includes('admin') && !userRoles.includes('boss'))) {
+           return res.status(403).json({ message: 'Acesso negado: permissão insuficiente.' });
+        }
+
+    } catch (error) {
+        console.error("Erro na validação do token:", error);
+        return res.status(401).json({ message: 'Acesso não autorizado: token inválido.' });
+    }
+    // --- Fim da verificação de segurança ---
+
+    const { profileName, email, password, courseType, roles, loginAlias }: {
+        profileName: string;
+        email: string;
+        password: string;
+        courseType: CourseType;
+        roles: Role[];
+        loginAlias?: string;
+    } = req.body;
+
+    if (!profileName || !email || !password || !courseType || !roles) {
+        return res.status(400).json({ message: 'Campos essenciais (nome, email, senha, tipo de curso, cargos) são obrigatórios.' });
     }
     
-    // Validação da senha
     if (password.length < 6 || !/\d/.test(password)) {
         return res.status(400).json({ message: 'A senha deve ter no mínimo 6 caracteres e conter pelo menos um número.' });
     }
 
-
-    // Etapa 1: Criar a usuária no Supabase Auth usando o cliente admin.
-    // Isso requer a chave de serviço (SERVICE_ROLE_KEY).
+    // Etapa 1: Criar a usuária no Supabase Auth
     const { data: authData, error: authError } = await supabase.auth.admin.createUser({
-        email: loginId,
+        email: email,
         password: password,
-        email_confirm: true, // Auto-confirma o email, já que o admin está criando
+        email_confirm: true,
+        user_metadata: {
+            name: profileName,
+            roles: roles,
+        }
     });
 
     if (authError || !authData.user) {
@@ -41,15 +76,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         .insert([{
             user_id: authData.user.id,
             name: profileName,
-            roles: ['student'], // Novas usuárias sempre começam com o cargo 'student'.
+            email: email, // Store email here for easier lookup if needed
+            roles: roles,
             course_type: courseType,
+            login_alias: loginAlias || null,
         }]);
 
     if (profileError) {
         console.error('Erro na criação do perfil no Supabase:', profileError.message);
-        // IMPORTANTE: Se a criação do perfil falhar, reverter deletando a usuária do auth para evitar órfãos.
+        const errorMessage = profileError.message.includes('duplicate key value violates unique constraint "profiles_login_alias_key"')
+            ? `O ID de Login "${loginAlias}" já está em uso.`
+            : `Falha ao criar perfil: ${profileError.message}`;
+
         await supabase.auth.admin.deleteUser(authData.user.id);
-        return res.status(500).json({ message: `Falha ao criar perfil: ${profileError.message}` });
+        return res.status(500).json({ message: errorMessage });
     }
 
     return res.status(201).json({ success: true, message: `Usuária "${profileName}" criada com sucesso!` });

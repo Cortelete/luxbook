@@ -1,3 +1,4 @@
+// UI & Content Types
 export interface TableData {
   headers: string[];
   rows: string[][];
@@ -43,19 +44,16 @@ export interface CourseSection {
   content: ContentItem[];
 }
 
-// New type for different course plans
+// User & Auth Types
 export type CourseType = 'Lash Profissional' | 'Lash Empreendedora' | 'Lash Empresária VIP';
 
-// Defines the possible roles a user can have.
 export type Role = 'admin' | 'student' | 'mentor' | 'boss';
 
-// Represents the data associated with a logged-in user.
 export interface UserData {
+  id: string; // The user's UUID from Supabase
   name: string;
+  email: string; // The user's unique email
   roles: Role[]; // A user can have multiple roles
-  loginId: string; // The ID used for login (e.g., 'aluna')
   courseType: CourseType; // The course plan the student is enrolled in
+  loginAlias?: string; // An optional, unique alias for logging in
 }
-
-// Type alias for clarity in components that expect an authenticated user.
-export type AuthenticatedUser = UserData;
