@@ -1,5 +1,5 @@
-import React, { useState, FormEvent, useCallback, memo } from 'react';
-import { KeyIcon, IdentificationIcon } from './icons';
+import React, { useState, FormEvent, useCallback, memo, useRef, useEffect } from 'react';
+import { KeyIcon, IdentificationIcon, EyeIcon, EyeSlashIcon } from './icons';
 import { UserData } from '../lib/types';
 
 interface LoginProps {
@@ -14,8 +14,9 @@ const InputField: React.FC<{
     placeholder:string, 
     Icon: React.FC<any>, 
     required?: boolean,
-    autoCapitalize?: 'on' | 'off' | 'none' | 'sentences' | 'words' | 'characters'
-}> = memo(({ id, type, value, onChange, placeholder, Icon, required = true, autoCapitalize = 'none' }) => (
+    autoCapitalize?: 'on' | 'off' | 'none' | 'sentences' | 'words' | 'characters',
+    className?: string;
+}> = memo(({ id, type, value, onChange, placeholder, Icon, required = true, autoCapitalize = 'none', className = '' }) => (
     <div className="relative">
         <span className="absolute inset-y-0 left-0 flex items-center pl-3">
             <Icon className="h-5 w-5 text-gray-400" />
@@ -27,7 +28,7 @@ const InputField: React.FC<{
             onChange={(e) => onChange(e.target.value)}
             required={required}
             autoCapitalize={autoCapitalize}
-            className="w-full pl-10 pr-4 py-3 bg-light-hover dark:bg-dark-hover border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-gold transition-all"
+            className={`w-full pl-10 pr-4 py-3 bg-light-hover dark:bg-dark-hover border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-gold transition-all ${className}`}
             placeholder={placeholder}
         />
     </div>
@@ -38,7 +39,9 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [userId, setUserId] = useState('');
     const [accessCode, setAccessCode] = useState('');
-    
+    const [isCodeVisible, setIsCodeVisible] = useState(false);
+    const visibilityTimerRef = useRef<number | null>(null);
+
     const handleLoginSubmit = useCallback(async (e: FormEvent) => {
         e.preventDefault();
         setError('');
@@ -68,6 +71,24 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         }
     }, [userId, accessCode, onLoginSuccess]);
 
+    const showCodeTemporarily = useCallback(() => {
+        if (visibilityTimerRef.current) {
+            clearTimeout(visibilityTimerRef.current);
+        }
+        setIsCodeVisible(true);
+        visibilityTimerRef.current = window.setTimeout(() => {
+            setIsCodeVisible(false);
+        }, 5000);
+    }, []);
+
+    useEffect(() => {
+        return () => {
+            if (visibilityTimerRef.current) {
+                clearTimeout(visibilityTimerRef.current);
+            }
+        };
+    }, []);
+
     return (
         <div className="flex items-center justify-center min-h-screen bg-light-bg dark:bg-dark-bg p-4 font-sans">
             <div className="w-full max-w-sm mx-auto">
@@ -94,15 +115,33 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
                         </div>
                         <div>
                             <label htmlFor="access-code" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Código de Acesso</label>
-                            <InputField 
-                                id="access-code" 
-                                type="text" 
-                                value={accessCode} 
-                                onChange={setAccessCode} 
-                                placeholder="INSIRA SEU CÓDIGO" 
-                                Icon={KeyIcon}
-                                autoCapitalize="characters"
-                            />
+                            <div className="relative">
+                                <span className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <KeyIcon className="h-5 w-5 text-gray-400" />
+                                </span>
+                                <input
+                                    id="access-code"
+                                    type={isCodeVisible ? 'text' : 'password'}
+                                    value={accessCode}
+                                    onChange={(e) => setAccessCode(e.target.value)}
+                                    required
+                                    autoCapitalize="characters"
+                                    className="w-full pl-10 pr-12 py-3 bg-light-hover dark:bg-dark-hover border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-gold transition-all"
+                                    placeholder="INSIRA SEU CÓDIGO"
+                                />
+                                <button
+                                    type="button"
+                                    onClick={showCodeTemporarily}
+                                    className="absolute inset-y-0 right-0 flex items-center pr-4 text-gray-400 hover:text-gold"
+                                    aria-label="Mostrar código de acesso"
+                                >
+                                    {isCodeVisible ? (
+                                        <EyeSlashIcon className="h-5 w-5" />
+                                    ) : (
+                                        <EyeIcon className="h-5 w-5" />
+                                    )}
+                                </button>
+                            </div>
                         </div>
                          <div className="pt-2">
                             <button

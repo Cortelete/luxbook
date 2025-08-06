@@ -219,3 +219,16 @@ export const AtSymbolIcon: React.FC<IconProps> = ({ className, style }) => (
         <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 12a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0Zm0 0c0 1.657 1.007 3 2.25 3S21 13.657 21 12a9 9 0 1 0-2.636 6.364M16.5 12V8.25" />
     </svg>
 );
+
+export const EyeIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639l4.43-6.108a1.012 1.012 0 0 1 1.64 0l4.43 6.108a1.012 1.012 0 0 1-1.64 1.278L12 9.176l-2.864 3.954a1.012 1.012 0 0 1-1.64 0l-4.43-6.108zM15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0z" />
+  </svg>
+);
+
+export const EyeSlashIcon: React.FC<IconProps> = ({ className, style }) => (
+  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className} style={style}>
+    <path strokeLinecap="round" strokeLinejoin="round" d="M3.98 8.223A10.477 10.477 0 0 0 12 4.5c4.83 0 9.096 3.036 10.478 7.223a.75.75 0 0 1 0 .554A10.477 10.477 0 0 0 12 19.5c-4.83 0-9.096-3.036-10.478-7.223a.75.75 0 0 1 0-.554ZM12 15.75a3.75 3.75 0 1 0 0-7.5 3.75 3.75 0 0 0 0 7.5Z" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M17.25 6.75 6.75 17.25" />
+  </svg>
+);
