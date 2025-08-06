@@ -2,46 +2,47 @@ import { UserData } from '../lib/types';
 
 /**
  * Mapeia códigos de acesso únicos para os dados de cada usuária.
- * Este objeto funciona como a nova "base de dados" de usuárias.
+ * Este objeto funciona como a "base de dados" de usuárias.
+ * A CHAVE do objeto é o CÓDIGO DE ACESSO em maiúsculas.
  * 
  * Para adicionar uma nova aluna:
  * 1. Crie um código de acesso único e secreto para ela (ex: 'NOMEALUNA2025').
- * 2. Adicione uma nova entrada ao objeto `userAccessCodes`.
- * 3. Preencha os dados: id (pode ser o código em minúsculas), nome, email, cargos (geralmente ['student']) e o tipo de curso.
+ * 2. Adicione uma nova entrada a este objeto `userAccessCodes` usando o código como chave.
+ * 3. Preencha os dados: id (pode ser um id único em minúsculas), nome, email, cargos e o tipo de curso.
  */
 export const userAccessCodes: Record<string, UserData> = {
-  // --- Códigos de Administradores ---
-  'LUXJOY42': { 
-    id: 'user-boss', 
-    name: 'Srta. Joyci de Fátima Almeida Amaro da Silva', 
-    email: 'luxury.joycalmeida@gmail.com', 
+  // --- Códigos de Administradores e Gerência ---
+  'IARTE42': { 
+    id: 'iarte.ia', 
+    name: 'Davi Cortelete Alves de Oliveira', 
+    email: 'iarte.ctt@gmail.com', 
     roles: ['boss', 'admin', 'student'], 
     courseType: 'Lash Empresária VIP' 
   },
-  'IARTE42': { 
-    id: 'user-admin', 
-    name: 'Davi Cortelete Alves de Oliveira', 
-    email: 'admin@luxury.com', 
+  'LUX42JOY': { 
+    id: 'superjoy', 
+    name: 'Joyci de Fátima Almeida Amaro da Silva', 
+    email: 'luxury.joycialmeida@gmail.com', 
     roles: ['boss', 'admin', 'student'], 
     courseType: 'Lash Empresária VIP' 
   },
 
   // --- Códigos de Alunas (TESTES) ---
-  'TESTEVIP77': {
+  'VIPTESTE1': {
     id: 'vipteste1',
     name: 'Teste (VIP)',
     email: 'maria.vip@example.com',
     roles: ['student'],
     courseType: 'Lash Empresária VIP',
   },
-  'TESTEEMP77': {
+  'EMPTESTE1': {
     id: 'empteste1',
     name: 'Teste (Empreendedora)',
     email: 'ana.empreendedora@example.com',
     roles: ['student'],
     courseType: 'Lash Empreendedora',
   },
-  'TESTEPRO77': {
+  'PROTESTE1': {
     id: 'proteste1',
     name: 'Teste (Profissional)',
     email: 'carla.profissional@example.com',
@@ -50,14 +51,14 @@ export const userAccessCodes: Record<string, UserData> = {
   },
 
 // --- Códigos de Alunas (REAIS) ---
-    'LFM153PRO': {
+  'LORR153': {
     id: 'lorrainefm',
     name: 'Lorraine Franciny Miranda',
     email: 'lorrainefrancinymiranda1@gmail.com',
     roles: ['student'],
     courseType: 'Lash Profissional',
   },
-    'RFC109PRO': {
+  'RAFA109': {
     id: 'rafaellasc',
     name: 'Rafaella De Souza Cordeiro',
     email: 'rafaellacordeiro1902@gmail.com',

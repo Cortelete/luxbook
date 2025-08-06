@@ -29,26 +29,40 @@ const AddStudentPanel: React.FC = memo(() => {
         <div className="animate-fade-in-slide-up text-center">
             <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Como Adicionar Nova Aluna</h3>
             <div className="bg-light-hover dark:bg-dark-hover p-6 rounded-lg border border-light-border dark:border-dark-border space-y-4 text-left max-w-2xl mx-auto">
-                <p className="font-semibold text-light-text-primary dark:text-dark-text-primary">O processo de cadastro de alunas foi simplificado:</p>
+                <p className="font-semibold text-light-text-primary dark:text-dark-text-primary">O processo de cadastro de alunas segue o sistema de Código de Acesso como chave:</p>
                 <ol className="list-decimal list-inside space-y-3 text-light-text-secondary dark:text-dark-text-secondary">
+                    <li>
+                        <strong>Defina o Código de Acesso:</strong>
+                        <p className="ml-4 mt-1">Crie um código de acesso único e secreto para a nova aluna (ex: <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">'NOVATURMA2024'</code>).</p>
+                    </li>
                     <li>
                         <strong>Edite o Arquivo de Credenciais:</strong>
                         <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
                             <li>Abra o arquivo <code className="bg-dark-bg text-gold px-2 py-1 rounded-md text-sm">data/userCredentials.ts</code> no código-fonte da aplicação.</li>
-                            <li>Role até o final do array <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">userCredentials</code>.</li>
-                            <li>Copie um dos objetos de aluna existentes e cole-o, ajustando os dados para a nova aluna: <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">id</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">name</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">email</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">courseType</code> e o <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">accessCode</code>.</li>
+                            <li>No objeto <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">userAccessCodes</code>, adicione uma nova entrada.</li>
+                            <li>A <strong>chave</strong> será o código de acesso que você criou (entre aspas e em maiúsculas).</li>
+                            <li>O <strong>valor</strong> será um objeto com os dados da aluna: <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">id</code> (único, minúsculo), <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">name</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">email</code>, e <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">courseType</code>.</li>
                         </ul>
+                    </li>
+                     <li>
+                        <strong>Exemplo:</strong>
+                        <pre className="bg-dark-bg text-xs text-dark-text-primary p-3 rounded-md overflow-x-auto mt-2">
+{`'NOVATURMA2024': {
+  id: 'nomealuna',
+  name: 'Nome Completo da Aluna',
+  email: 'email@aluna.com',
+  roles: ['student'],
+  courseType: 'Lash Profissional',
+},`}
+                        </pre>
                     </li>
                     <li>
                         <strong>Publique a Atualização:</strong>
-                        <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                            <li>Salve o arquivo alterado.</li>
-                            <li>Faça o "deploy" (publicação) da nova versão da aplicação na Vercel para que as mudanças entrem em vigor.</li>
-                        </ul>
+                        <p className="ml-4 mt-1">Salve o arquivo e faça o "deploy" (publicação) da nova versão na Vercel para que as mudanças entrem em vigor.</p>
                     </li>
                 </ol>
                  <p className="mt-4 text-sm text-yellow-600 dark:text-yellow-400">
-                    <strong>Atenção:</strong> Com este método, os códigos de acesso são visíveis no código-fonte. Ele é mais simples, mas menos seguro que o método anterior com variáveis de ambiente.
+                    <strong>Atenção:</strong> Este sistema é muito direto, mas lembre-se que os códigos de acesso são visíveis no código-fonte.
                 </p>
             </div>
         </div>

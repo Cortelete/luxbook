@@ -1,43 +1,37 @@
 import { UserData } from '../lib/types';
-import { userCredentials } from '../data/userCredentials';
+import { userAccessCodes } from '../data/userCredentials';
 
 // Helper function to introduce a delay, simulating processing time.
 const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 /**
- * Verifica as credenciais da usuária.
- * Esta função agora roda no cliente, mas inclui um atraso para dificultar ataques.
- * @param userId - O ID de usuário fornecido.
+ * Verifica as credenciais da usuária usando o sistema antigo (código de acesso como chave).
  * @param accessCode - O código de acesso fornecido.
  * @returns Uma Promise que resolve para os dados da usuária (UserData) em caso de sucesso, ou null em caso de falha.
  */
-export async function verifyCredentials(userId: string, accessCode: string): Promise<UserData | null> {
+export async function verifyCredentials(accessCode: string): Promise<UserData | null> {
     // Simula o tempo de processamento do servidor para segurança.
     await sleep(750);
     
-    const sanitizedUserId = userId.trim().toLowerCase();
     const sanitizedAccessCode = accessCode.trim().toUpperCase();
 
-    const userSpec = userCredentials.find(u => u.id.toLowerCase() === sanitizedUserId);
+    // Busca direta no objeto usando o código como chave.
+    const userData = userAccessCodes[sanitizedAccessCode];
 
-    if (userSpec && userSpec.accessCode.toUpperCase() === sanitizedAccessCode) {
-        // Se as credenciais estiverem corretas, retorna os dados da usuária sem o código de acesso.
-        const { accessCode, ...userData } = userSpec;
+    if (userData) {
         return userData;
     }
 
-    // Se não encontrar ou a senha estiver incorreta, retorna null.
+    // Se o código não for encontrado, retorna null.
     return null;
 }
 
 /**
  * Retorna uma lista de todas as usuárias da base de dados local.
- * Usado pelo Painel Admin para exibir as alunas cadastradas.
  * @returns Um array de UserData.
  */
 export function getUsers(): UserData[] {
-    // Retorna uma lista ordenada de usuárias, omitindo o código de acesso.
-    return userCredentials
-        .map(({ accessCode, ...userData }) => userData)
+    // Usa Object.values para obter todos os dados de usuária do objeto.
+    return Object.values(userAccessCodes)
         .sort((a, b) => a.name.localeCompare(b.name));
 }

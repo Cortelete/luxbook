@@ -1,5 +1,5 @@
 import React, { useState, FormEvent, useCallback, memo, useRef, useEffect } from 'react';
-import { KeyIcon, IdentificationIcon, EyeIcon, EyeSlashIcon } from './icons';
+import { KeyIcon, EyeIcon, EyeSlashIcon } from './icons';
 import { UserData } from '../lib/types';
 import { verifyCredentials } from '../services/authService';
 
@@ -7,38 +7,9 @@ interface LoginProps {
     onLoginSuccess: (user: UserData) => void;
 }
 
-const InputField: React.FC<{
-    id:string, 
-    type:string, 
-    value:string, 
-    onChange: (val:string) => void, 
-    placeholder:string, 
-    Icon: React.FC<any>, 
-    required?: boolean,
-    autoCapitalize?: 'on' | 'off' | 'none' | 'sentences' | 'words' | 'characters',
-    className?: string;
-}> = memo(({ id, type, value, onChange, placeholder, Icon, required = true, autoCapitalize = 'none', className = '' }) => (
-    <div className="relative">
-        <span className="absolute inset-y-0 left-0 flex items-center pl-3">
-            <Icon className="h-5 w-5 text-gray-400" />
-        </span>
-        <input
-            id={id}
-            type={type}
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
-            required={required}
-            autoCapitalize={autoCapitalize}
-            className={`w-full pl-10 pr-4 py-3 bg-light-hover dark:bg-dark-hover border border-light-border dark:border-dark-border rounded-lg text-light-text-primary dark:text-dark-text-primary focus:outline-none focus:ring-2 focus:ring-gold transition-all ${className}`}
-            placeholder={placeholder}
-        />
-    </div>
-));
-
 const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
     const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [userId, setUserId] = useState('');
     const [accessCode, setAccessCode] = useState('');
     const [isCodeVisible, setIsCodeVisible] = useState(false);
     const visibilityTimerRef = useRef<number | null>(null);
@@ -49,13 +20,13 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         setIsLoading(true);
         
         try {
-            // Chama o serviço de verificação local em vez da API
-            const userData = await verifyCredentials(userId, accessCode);
+            // Chama o serviço de verificação com apenas o código de acesso
+            const userData = await verifyCredentials(accessCode);
 
             if (userData) {
                 onLoginSuccess(userData);
             } else {
-                setError('ID de Usuário ou Código de Acesso inválido.');
+                setError('Código de Acesso inválido.');
             }
         } catch (err: any) {
             // Este catch agora é para erros inesperados na lógica, não de rede.
@@ -64,7 +35,7 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         } finally {
             setIsLoading(false);
         }
-    }, [userId, accessCode, onLoginSuccess]);
+    }, [accessCode, onLoginSuccess]);
 
     const showCodeTemporarily = useCallback(() => {
         if (visibilityTimerRef.current) {
@@ -96,18 +67,6 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
 
                 <div className="bg-light-card dark:bg-dark-card p-8 rounded-2xl shadow-2xl border border-light-border dark:border-dark-border">
                     <form id="login-form" onSubmit={handleLoginSubmit} className="space-y-6">
-                        <div>
-                            <label htmlFor="user-id" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">ID de Usuário</label>
-                            <InputField 
-                                id="user-id" 
-                                type="text" 
-                                value={userId} 
-                                onChange={setUserId} 
-                                placeholder="SEU ID DE USUÁRIO" 
-                                Icon={IdentificationIcon}
-                                autoCapitalize="none"
-                            />
-                        </div>
                         <div>
                             <label htmlFor="access-code" className="block text-sm font-medium text-light-text-secondary dark:text-dark-text-secondary mb-2">Código de Acesso</label>
                             <div className="relative">
@@ -142,7 +101,7 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
                             <button
                                 type="submit"
                                 form="login-form"
-                                disabled={isLoading || !accessCode || !userId}
+                                disabled={isLoading || !accessCode}
                                 className="w-full flex justify-center py-3 px-4 bg-gold text-dark-bg font-bold rounded-lg shadow-lg hover:bg-gold/90 focus:outline-none focus:ring-4 focus:ring-yellow-500/50 transition-all transform hover:scale-105 disabled:bg-gold/50 disabled:cursor-not-allowed"
                             >
                                 {isLoading ? 'Verificando...' : 'Entrar'}
