@@ -2,16 +2,20 @@ import { UserData } from '../lib/types';
 import { userAccessCodes } from '../data/userCredentials';
 
 /**
- * Verifica se um código de acesso é válido, comparando-o com a base de dados local.
+ * Verifica se um ID de usuário e código de acesso são válidos, comparando-os com a base de dados local.
  * A verificação não diferencia maiúsculas/minúsculas e ignora espaços para melhor UX.
+ * @param userId O ID de usuário inserido pela usuária.
  * @param code O código de acesso inserido pela usuária.
- * @returns O objeto UserData correspondente se o código for válido, caso contrário, null.
+ * @returns O objeto UserData correspondente se as credenciais forem válidas, caso contrário, null.
  */
-export function verifyAccessCode(code: string): UserData | null {
+export function verifyCredentials(userId: string, code: string): UserData | null {
     const sanitizedCode = code.trim().toUpperCase();
+    const sanitizedUserId = userId.trim().toLowerCase();
     
-    if (userAccessCodes[sanitizedCode]) {
-        return userAccessCodes[sanitizedCode];
+    const user = userAccessCodes[sanitizedCode];
+
+    if (user && user.id.toLowerCase() === sanitizedUserId) {
+        return user;
     }
     
     return null;
