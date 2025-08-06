@@ -1,6 +1,7 @@
 import React, { useState, FormEvent, useCallback, memo, useRef, useEffect } from 'react';
 import { KeyIcon, IdentificationIcon, EyeIcon, EyeSlashIcon } from './icons';
 import { UserData } from '../lib/types';
+import { verifyCredentials } from '../services/authService';
 
 interface LoginProps {
     onLoginSuccess: (user: UserData) => void;
@@ -48,24 +49,18 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         setIsLoading(true);
         
         try {
-            const response = await fetch('/api/login', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId, accessCode }),
-            });
+            // Chama o serviço de verificação local em vez da API
+            const userData = await verifyCredentials(userId, accessCode);
 
-            const data = await response.json();
-
-            if (response.ok) {
-                onLoginSuccess(data as UserData);
+            if (userData) {
+                onLoginSuccess(userData);
             } else {
-                setError(data.error || 'ID de Usuário ou Código de Acesso inválido.');
+                setError('ID de Usuário ou Código de Acesso inválido.');
             }
         } catch (err: any) {
-            setError('Não foi possível conectar ao servidor. Verifique sua conexão.');
-            console.error("Login API call failed:", err);
+            // Este catch agora é para erros inesperados na lógica, não de rede.
+            setError('Ocorreu um erro inesperado. Tente novamente.');
+            console.error("Login verification failed:", err);
         } finally {
             setIsLoading(false);
         }

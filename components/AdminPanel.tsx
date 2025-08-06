@@ -29,38 +29,27 @@ const AddStudentPanel: React.FC = memo(() => {
         <div className="animate-fade-in-slide-up text-center">
             <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Como Adicionar Nova Aluna</h3>
             <div className="bg-light-hover dark:bg-dark-hover p-6 rounded-lg border border-light-border dark:border-dark-border space-y-4 text-left max-w-2xl mx-auto">
-                <p className="text-light-text-secondary dark:text-dark-text-secondary">
-                    Para garantir a segurança dos códigos de acesso, o cadastro de novas alunas é feito em duas etapas: no painel da Vercel (para o código secreto) e no código da aplicação (para os dados da aluna).
-                </p>
-                <p className="font-semibold text-light-text-primary dark:text-dark-text-primary">Siga estes passos:</p>
+                <p className="font-semibold text-light-text-primary dark:text-dark-text-primary">O processo de cadastro de alunas foi simplificado:</p>
                 <ol className="list-decimal list-inside space-y-3 text-light-text-secondary dark:text-dark-text-secondary">
                     <li>
-                        <strong>No Código da Aplicação:</strong>
+                        <strong>Edite o Arquivo de Credenciais:</strong>
                         <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                            <li>Abra o arquivo <code className="bg-dark-bg text-gold px-2 py-1 rounded-md text-sm">data/userCredentials.ts</code>.</li>
-                            <li>Defina um nome de chave para a variável de ambiente do código de acesso (ex: <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">S_NOVAALUNA_KEY</code>).</li>
-                             <li>Copie um dos objetos de aluna existentes e cole-o no final do array <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">userCredentials</code>.</li>
-                            <li>Preencha os dados da nova aluna: <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">id</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">name</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">email</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">courseType</code> e o <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">accessCodeEnvKey</code> definido acima.</li>
-                        </ul>
-                    </li>
-                     <li>
-                        <strong>No Painel da Vercel:</strong>
-                         <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                            <li>Acesse as configurações do seu projeto na Vercel.</li>
-                            <li>Vá para "Settings" &rarr; "Environment Variables".</li>
-                            <li>Clique em "Add New" e crie uma variável com o nome da chave que você definiu (<code className="bg-dark-bg text-gold px-1 rounded-md text-xs">S_NOVAALUNA_KEY</code>).</li>
-                             <li>No campo "Value", insira o <strong className="text-gold">código de acesso secreto</strong> que a aluna usará para entrar (ex: 'NOVONOME2024').</li>
-                            <li>Salve a variável de ambiente.</li>
+                            <li>Abra o arquivo <code className="bg-dark-bg text-gold px-2 py-1 rounded-md text-sm">data/userCredentials.ts</code> no código-fonte da aplicação.</li>
+                            <li>Role até o final do array <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">userCredentials</code>.</li>
+                            <li>Copie um dos objetos de aluna existentes e cole-o, ajustando os dados para a nova aluna: <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">id</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">name</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">email</code>, <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">courseType</code> e o <code className="bg-dark-bg text-gold px-1 rounded-md text-xs">accessCode</code>.</li>
                         </ul>
                     </li>
                     <li>
-                        <strong>Finalização:</strong>
-                         <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
-                            <li>Salve o arquivo <code className="bg-dark-bg text-gold px-2 py-1 rounded-md text-sm">data/userCredentials.ts</code>.</li>
-                            <li>Faça o "deploy" (publicação) da nova versão da aplicação para que as mudanças entrem em vigor.</li>
+                        <strong>Publique a Atualização:</strong>
+                        <ul className="list-disc list-inside ml-4 mt-2 space-y-1">
+                            <li>Salve o arquivo alterado.</li>
+                            <li>Faça o "deploy" (publicação) da nova versão da aplicação na Vercel para que as mudanças entrem em vigor.</li>
                         </ul>
                     </li>
                 </ol>
+                 <p className="mt-4 text-sm text-yellow-600 dark:text-yellow-400">
+                    <strong>Atenção:</strong> Com este método, os códigos de acesso são visíveis no código-fonte. Ele é mais simples, mas menos seguro que o método anterior com variáveis de ambiente.
+                </p>
             </div>
         </div>
     );
