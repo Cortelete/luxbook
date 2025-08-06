@@ -18,7 +18,7 @@ export interface UserCredentialSpec extends UserData {
 export const userCredentials: UserCredentialSpec[] = [
   // --- Administradores e Gerência ---
     { 
-    id: 'user-admin', 
+    id: 'iarte.ia', 
     name: 'Davi Cortelete Alves de Oliveira', 
     email: 'admin@luxury.com', 
     roles: ['boss', 'admin', 'student'], 
@@ -26,7 +26,7 @@ export const userCredentials: UserCredentialSpec[] = [
     accessCodeEnvKey: 'S_USERBOSS_KEY'
   },
   { 
-    id: 'user-boss', 
+    id: 'superjoy', 
     name: 'Joyci de Fátima Almeida Amaro da Silva', 
     email: 'luxury.joycalmeida@gmail.com', 
     roles: ['boss', 'admin', 'student'], 
