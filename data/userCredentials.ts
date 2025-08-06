@@ -55,4 +55,18 @@ export const userAccessCodes: Record<string, UserData> = {
     roles: ['student'],
     courseType: 'Lash Profissional',
   },
+    'LFM153PRO': {
+    id: 'lorrainefm',
+    name: 'Lorraine Franciny Miranda',
+    email: 'lorrainefrancinymiranda1@gmail.com',
+    roles: ['student'],
+    courseType: 'Lash Profissional',
+  },
+    'RFC109PRO': {
+    id: 'rafaellasc',
+    name: 'Rafaella De Souza Cordeiro',
+    email: 'rafaellacordeiro1902@gmail.com',
+    roles: ['student'],
+    courseType: 'Lash Profissional',
+  },
 };
