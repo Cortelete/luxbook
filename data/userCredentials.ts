@@ -13,48 +13,43 @@ export const userAccessCodes: Record<string, UserData> = {
   // --- Códigos de Administradores ---
   'LUXJOY42': { 
     id: 'user-boss', 
-    name: 'Joyci Almeida', 
-    email: 'joyci@luxury.com', 
+    name: 'Srta. Joyci de Fátima Almeida Amaro da Silva', 
+    email: 'luxury.joycalmeida@gmail.com', 
     roles: ['boss', 'admin', 'student'], 
     courseType: 'Lash Empresária VIP' 
   },
   'IARTE42': { 
     id: 'user-admin', 
-    name: 'Admin', 
+    name: 'Davi Cortelete Alves de Oliveira', 
     email: 'admin@luxury.com', 
-    roles: ['admin', 'student'], 
+    roles: ['boss', 'admin', 'student'], 
     courseType: 'Lash Empresária VIP' 
   },
 
-  // --- Códigos de Alunas (Exemplos) ---
-  'MARIAVIP123': {
-    id: 'mariavip123',
-    name: 'Maria Silva (VIP)',
+  // --- Códigos de Alunas (TESTES) ---
+  'TESTEVIP77': {
+    id: 'vipteste1',
+    name: 'Teste (VIP)',
     email: 'maria.vip@example.com',
     roles: ['student'],
     courseType: 'Lash Empresária VIP',
   },
-  'ANAEMP456': {
-    id: 'anaemp456',
-    name: 'Ana Souza (Empreendedora)',
+  'TESTEEMP77': {
+    id: 'empteste1',
+    name: 'Teste (Empreendedora)',
     email: 'ana.empreendedora@example.com',
     roles: ['student'],
     courseType: 'Lash Empreendedora',
   },
-  'CARLAPRO789': {
-    id: 'carlapro789',
-    name: 'Carla Santos (Profissional)',
+  'TESTEPRO77': {
+    id: 'proteste1',
+    name: 'Teste (Profissional)',
     email: 'carla.profissional@example.com',
     roles: ['student'],
     courseType: 'Lash Profissional',
   },
-  'LUXACAD777': {
-    id: 'luxacad777',
-    name: 'Nova Aluna (Acesso 777)',
-    email: 'aluna777@example.com',
-    roles: ['student'],
-    courseType: 'Lash Profissional',
-  },
+
+// --- Códigos de Alunas (REAIS) ---
     'LFM153PRO': {
     id: 'lorrainefm',
     name: 'Lorraine Franciny Miranda',
