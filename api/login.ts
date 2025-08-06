@@ -2,13 +2,20 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { userCredentials } from '../data/userCredentials';
 import { UserData } from '../lib/types';
 
-export default function handler(req: VercelRequest, res: VercelResponse) {
+// Helper function to introduce a delay
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+export default async function handler(req: VercelRequest, res: VercelResponse) { // Handler is now async
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
     }
 
     try {
+        // Adiciona um atraso deliberado de 750ms para dificultar ataques de força bruta.
+        // O atraso é constante para sucessos e falhas, prevenindo ataques de temporização.
+        await sleep(750);
+
         const { userId, accessCode } = req.body;
 
         if (!userId || !accessCode) {
