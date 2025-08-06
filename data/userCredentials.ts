@@ -1,67 +1,81 @@
 import { UserData } from '../lib/types';
 
+export interface UserCredentialSpec extends UserData {
+    accessCodeEnvKey: string;
+}
+
 /**
- * Mapeia códigos de acesso únicos para os dados de cada usuária.
- * Este objeto funciona como a nova "base de dados" de usuárias.
+ * Define as especificações para cada usuária, incluindo a chave da variável de ambiente
+ * onde o código de acesso secreto está armazenado.
  * 
- * Para adicionar uma nova aluna:
- * 1. Crie um código de acesso único e secreto para ela (ex: 'NOMEALUNA2025').
- * 2. Adicione uma nova entrada ao objeto `userAccessCodes`.
- * 3. Preencha os dados: id (pode ser o código em minúsculas), nome, email, cargos (geralmente ['student']) e o tipo de curso.
+ * Para adicionar uma nova aluna (sendo admin):
+ * 1. Defina um nome para a variável de ambiente do código de acesso (ex: 'S_NOVAALUNA_KEY').
+ * 2. Adicione essa variável de ambiente no Vercel com o código de acesso secreto da aluna como valor.
+ * 3. Adicione um novo objeto a este array `userCredentials` com os dados da aluna
+ *    e o `accessCodeEnvKey` que você definiu no passo 1.
+ * 4. Faça o deploy (publicação) da nova versão da aplicação.
  */
-export const userAccessCodes: Record<string, UserData> = {
-  // --- Códigos de Administradores ---
-  'LUXJOY42': { 
-    id: 'user-boss', 
-    name: 'Srta. Joyci de Fátima Almeida Amaro da Silva', 
-    email: 'luxury.joycalmeida@gmail.com', 
-    roles: ['boss', 'admin', 'student'], 
-    courseType: 'Lash Empresária VIP' 
-  },
-  'IARTE42': { 
+export const userCredentials: UserCredentialSpec[] = [
+  // --- Administradores e Gerência ---
+    { 
     id: 'user-admin', 
     name: 'Davi Cortelete Alves de Oliveira', 
     email: 'admin@luxury.com', 
     roles: ['boss', 'admin', 'student'], 
-    courseType: 'Lash Empresária VIP' 
+    courseType: 'Lash Empresária VIP',
+    accessCodeEnvKey: 'S_USERBOSS_KEY'
+  },
+  { 
+    id: 'user-boss', 
+    name: 'Joyci de Fátima Almeida Amaro da Silva', 
+    email: 'luxury.joycalmeida@gmail.com', 
+    roles: ['boss', 'admin', 'student'], 
+    courseType: 'Lash Empresária VIP',
+    accessCodeEnvKey: 'S_USERADMIN_KEY'
   },
 
+
   // --- Códigos de Alunas (TESTES) ---
-  'TESTEVIP77': {
+  {
     id: 'vipteste1',
     name: 'Teste (VIP)',
     email: 'maria.vip@example.com',
     roles: ['student'],
     courseType: 'Lash Empresária VIP',
+    accessCodeEnvKey: 'S_TESTEVIP1_KEY'
   },
-  'TESTEEMP77': {
+  {
     id: 'empteste1',
     name: 'Teste (Empreendedora)',
     email: 'ana.empreendedora@example.com',
     roles: ['student'],
     courseType: 'Lash Empreendedora',
+    accessCodeEnvKey: 'S_TESTEEMP1_KEY'
   },
-  'TESTEPRO77': {
+  {
     id: 'proteste1',
     name: 'Teste (Profissional)',
     email: 'carla.profissional@example.com',
     roles: ['student'],
     courseType: 'Lash Profissional',
+    accessCodeEnvKey: 'S_TESTEPRO1_KEY'
   },
 
 // --- Códigos de Alunas (REAIS) ---
-    'LFM153PRO': {
+    {
     id: 'lorrainefm',
     name: 'Lorraine Franciny Miranda',
     email: 'lorrainefrancinymiranda1@gmail.com',
     roles: ['student'],
     courseType: 'Lash Profissional',
+    accessCodeEnvKey: 'S_LORRAINEFM_KEY'
   },
-    'RFC109PRO': {
+    {
     id: 'rafaellasc',
     name: 'Rafaella De Souza Cordeiro',
     email: 'rafaellacordeiro1902@gmail.com',
     roles: ['student'],
     courseType: 'Lash Profissional',
+    accessCodeEnvKey: 'S_RAFAELLASC_KEY'
   },
-};
+];

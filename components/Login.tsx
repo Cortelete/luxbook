@@ -1,5 +1,4 @@
 import React, { useState, FormEvent, useCallback, memo } from 'react';
-import { verifyCredentials } from '../services/authService';
 import { KeyIcon, IdentificationIcon } from './icons';
 import { UserData } from '../lib/types';
 
@@ -46,18 +45,24 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         setIsLoading(true);
         
         try {
-            // Simula uma pequena espera para feedback visual
-            await new Promise(res => setTimeout(res, 300));
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId, accessCode }),
+            });
 
-            const user = verifyCredentials(userId, accessCode);
-            if (user) {
-                onLoginSuccess(user);
+            const data = await response.json();
+
+            if (response.ok) {
+                onLoginSuccess(data as UserData);
             } else {
-                setError('ID de Usuário ou Código de Acesso inválido.');
+                setError(data.error || 'ID de Usuário ou Código de Acesso inválido.');
             }
         } catch (err: any) {
-            setError('Ocorreu um erro inesperado.');
-            console.error(err);
+            setError('Não foi possível conectar ao servidor. Verifique sua conexão.');
+            console.error("Login API call failed:", err);
         } finally {
             setIsLoading(false);
         }
