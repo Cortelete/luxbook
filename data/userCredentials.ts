@@ -11,7 +11,7 @@ import { UserData } from '../lib/types';
  */
 export const userAccessCodes: Record<string, UserData> = {
   // --- Códigos de Administradores ---
-  'LUXBOSS24': { 
+  'LUXBOSS42': { 
     id: 'user-boss', 
     name: 'Joyci Almeida', 
     email: 'joyci@luxury.com', 
