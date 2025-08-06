@@ -177,7 +177,7 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
                       <UserIcon className="w-8 h-8 text-gold flex-shrink-0"/>
                       {!isCollapsed && (
                           <div className="ml-3 overflow-hidden">
-                              <p className="text-sm font-semibold text-light-text-primary dark:text-dark-text-primary truncate">{authenticatedUser.name}</p>
+                              <p className="text-sm font-semibold text-light-text-primary dark:text-dark-text-primary truncate">{authenticatedUser.name.split(' ')[0]}</p>
                               <p className={`text-xs ${authenticatedUser.roles.includes('admin') || authenticatedUser.roles.includes('boss') ? 'text-gold font-bold' : 'text-light-text-secondary dark:text-dark-text-secondary'}`}>
                                  {formatRoles(authenticatedUser.roles)}
                               </p>
