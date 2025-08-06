@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Luxury Academy: Profissional</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            boxShadow: {
+              'glow-gold-light': '0 0 25px rgba(212, 175, 55, 0.3)',
+              'glow-gold-dark': '0 0 30px rgba(212, 175, 55, 0.4)',
+            },
+            colors: {
+              'gold': '#d4af37',
+              // Elegant Light Theme
+              'light': {
+                'bg': '#F9F9F9',         // Elegant off-white background
+                'card': '#FFFFFF',       // Pure white cards for clean contrast
+                'text-primary': '#1A1A1A', // Rich, off-black for text
+                'text-secondary': '#6B6B6B', // Soft gray for subtext
+                'border': '#EDEDED',      // Subtle border
+                'hover': '#F0F0F0'       // Hover for light elements
+              },
+              // Sophisticated Dark Theme
+              'dark': {
+                'bg': '#121212',          // Deep, dark gray background (not pure black)
+                'card': '#1E1E1E',        // Slightly lighter cards/sidebar
+                'text-primary': '#E0E0E0', // Soft off-white text
+                'text-secondary': '#9E9E9E', // Muted gray for subtext
+                'border': '#2E2E2E',      // Subtle dark border
+                'hover': '#2A2A2A'       // Hover for dark elements
+              }
+            },
+            fontFamily: {
+              sans: ['Poppins', 'sans-serif'],
+            },
+          },
+        },
+      }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      /* Hide default cursor on desktop */
+      @media (min-width: 768px) {
+        body, a, button {
+          cursor: none !important;
+        }
+      }
+
+      /* Restore text cursor for input fields */
+      input, textarea, [contenteditable="true"] {
+        cursor: text !important;
+      }
+      
+      /* --- MODERN UI ENHANCEMENTS --- */
+      
+      /* Animated Gradient Background */
+      @keyframes background-pan-slow {
+          0% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+          100% { background-position: 0% 50%; }
+      }
+
+      body {
+        --gradient-start-light: #F9F9F9;
+        --gradient-mid-light: #F0F0F0;
+        --gradient-end-light: #F9F9F9;
+        --gradient-start-dark: #121212;
+        --gradient-mid-dark: #1A1A1A;
+        --gradient-end-dark: #121212;
+
+        background: linear-gradient(120deg, var(--gradient-start-light), var(--gradient-mid-light), var(--gradient-end-light));
+        background-size: 200% 200%;
+        animation: background-pan-slow 20s ease infinite;
+        position: relative; /* For pseudo-element positioning */
+      }
+      
+      html.dark body {
+        background: linear-gradient(120deg, var(--gradient-start-dark), var(--gradient-mid-dark), var(--gradient-end-dark));
+        background-size: 200% 200%;
+        animation: background-pan-slow 20s ease infinite;
+      }
+
+      /* Interactive Aurora Effect */
+      body::after {
+          content: '';
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100vw;
+          height: 100vh;
+          background: radial-gradient(
+              800px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+              rgba(212, 175, 55, 0.06),
+              transparent 50%
+          );
+          z-index: 0; /* Behind content, above background */
+          pointer-events: none;
+          transition: opacity 0.5s;
+      }
+
+      html.dark body::after {
+          background: radial-gradient(
+              600px circle at var(--mouse-x, -1000px) var(--mouse-y, -1000px),
+              rgba(212, 175, 55, 0.1),
+              transparent 40%
+          );
+      }
+
+      /* Custom animations for new sections */
+      @keyframes page-enter {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
+      .animate-page-enter { animation: page-enter 0.6s ease-out forwards; }
+
+      /* Animation for accordion content items */
+      @keyframes fade-in-slide-up {
+        from {
+          opacity: 0;
+          transform: translateY(15px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .animate-fade-in-slide-up {
+        animation: fade-in-slide-up 0.5s ease-out forwards;
+      }
+      
+      /* Stylish Golden Scrollbar */
+      /* For Webkit-based browsers (Chrome, Safari, Edge) */
+      ::-webkit-scrollbar {
+        width: 8px;
+        height: 8px;
+      }
+
+      ::-webkit-scrollbar-track {
+        background-color: #F0F0F0; /* Default for light */
+      }
+      html.dark ::-webkit-scrollbar-track {
+        background-color: #1E1E1E; /* Dark mode track */
+      }
+
+      ::-webkit-scrollbar-thumb {
+        background-color: #d4af37;
+        border-radius: 20px;
+        border: 2px solid #F0F0F0; /* Border for light mode */
+        transition: background-color 0.3s ease;
+      }
+      html.dark ::-webkit-scrollbar-thumb {
+        border-color: #1E1E1E; /* Border for dark mode */
+      }
+
+      ::-webkit-scrollbar-thumb:hover {
+        background-color: #e6c66a;
+      }
+
+      /* For Firefox */
+      html {
+        scrollbar-width: thin;
+        scrollbar-color: #d4af37 #F0F0F0; /* thumb track for light */
+      }
+      html.dark {
+        scrollbar-color: #d4af37 #1E1E1E; /* thumb track for dark */
+      }
+      
+      /* Animation for Hora da Ação button */
+      @keyframes pulse-glow {
+        0%, 100% {
+          transform: scale(1);
+          box-shadow: 0 0 20px 5px rgba(212, 175, 55, 0.3);
+        }
+        50% {
+          transform: scale(1.05);
+          box-shadow: 0 0 30px 10px rgba(212, 175, 55, 0.5);
+        }
+      }
+
+      /* Animation for gradient text */
+      @keyframes background-pan {
+        0% { background-position: 0% center; }
+        100% { background-position: -200% center; }
+      }
+
+      /* Adicionado: Reduz o tamanho da fonte base em telas muito pequenas (abaixo de 420px).
+         Isso faz com que todo o texto (definido com 'rem') seja redimensionado
+         proporcionalmente, melhorando a legibilidade em dispositivos compactos. */
+      @media (max-width: 420px) {
+        html {
+          font-size: 14px; /* O padrão é 16px, reduzimos para melhorar o layout */
+        }
+      }
+      
+    </style>
+<script type="importmap">
+{
+  "imports": {
+    "react-dom/": "https://esm.sh/react-dom@^19.1.1/",
+    "@google/genai": "https://esm.sh/@google/genai@^1.12.0",
+    "react/": "https://esm.sh/react@^19.1.1/",
+    "react": "https://esm.sh/react@^19.1.1",
+    "@vercel/node": "https://esm.sh/@vercel/node@^5.3.8",
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@^2.44.4",
+    "jsonwebtoken": "https://esm.sh/jsonwebtoken@^9.0.2"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/index.js"></script>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
