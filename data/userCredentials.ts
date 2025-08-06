@@ -11,14 +11,14 @@ import { UserData } from '../lib/types';
  */
 export const userAccessCodes: Record<string, UserData> = {
   // --- Códigos de Administradores ---
-  'LUXBOSS42': { 
+  'LUXJOY42': { 
     id: 'user-boss', 
     name: 'Joyci Almeida', 
     email: 'joyci@luxury.com', 
     roles: ['boss', 'admin', 'student'], 
     courseType: 'Lash Empresária VIP' 
   },
-  'LUXADMIN24': { 
+  'IARTE42': { 
     id: 'user-admin', 
     name: 'Admin', 
     email: 'admin@luxury.com', 
