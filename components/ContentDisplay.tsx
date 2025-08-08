@@ -394,9 +394,8 @@ const CoursesPageLayout: React.FC<{section: CourseSection; allSections: CourseSe
                 </div>
 
                 <div className="bg-light-card dark:bg-dark-card border-2 border-dashed border-gold p-8 rounded-xl shadow-xl">
-                    <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary">Sua Jornada Continua!</h3>
-                    <p className="text-green-600 dark:text-green-400 text-5xl font-bold my-4">25% OFF</p>
-                    <p className="text-light-text-secondary dark:text-dark-text-secondary mb-6">Como aluna do Guia Profissional, você tem um desconto exclusivo em qualquer um dos nossos cursos avançados. Use seu novo conhecimento como um trampolim para o próximo nível!</p>
+                    <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Sua Jornada Continua!</h3>
+                    <p className="text-light-text-secondary dark:text-dark-text-secondary mb-6">Como aluna do Guia Profissional, use seu novo conhecimento como um trampolim para o próximo nível e continue sua jornada de especialização!</p>
                     <a 
                         href="http://luxacademy.vercel.app" 
                         target="_blank" 

@@ -3,6 +3,7 @@ import { UserData, CourseSection, CourseType, Role } from '../lib/types';
 import { graduationCodes } from '../data/graduationCodes';
 import { aiChatCodes } from '../data/aiChatCodes';
 import { getUsers } from '../services/authService';
+import { userAccessCodes } from '../data/userCredentials'; // Import user credentials
 import { UserIcon, KeyIcon, BookOpenIcon, PencilSquareIcon, AtSymbolIcon, LockClosedIcon, AcademicCapIcon, ShieldCheckIcon, RocketIcon, MegaphoneIcon, ConstructionIcon } from './icons';
 
 type AdminTab = 'students' | 'add_student' | 'codes' | 'modules' | 'permissions' | 'messages';
@@ -73,7 +74,6 @@ const StudentsPanel: React.FC<{ currentUser: UserData | null }> = memo(({ curren
     const [users, setUsers] = useState<UserData[]>([]);
 
     useEffect(() => {
-        // Busca as usuárias do serviço local, não mais de uma API
         setUsers(getUsers());
     }, []);
     
@@ -85,6 +85,13 @@ const StudentsPanel: React.FC<{ currentUser: UserData | null }> = memo(({ curren
           .join(', ');
     }
 
+    const getAccessCodeForUser = (userId: string): string => {
+        const entry = Object.entries(userAccessCodes).find(([, userData]) => userData.id === userId);
+        return entry ? entry[0] : 'N/A';
+    };
+    
+    const isBoss = currentUser?.roles.includes('boss') ?? false;
+
     return (
         <div className="animate-fade-in-slide-up">
             <h3 className="text-2xl font-bold text-light-text-primary dark:text-dark-text-primary mb-4">Gerenciar Alunas</h3>
@@ -94,6 +101,7 @@ const StudentsPanel: React.FC<{ currentUser: UserData | null }> = memo(({ curren
                         <tr>
                             <th className="px-4 py-2 text-left text-xs font-bold text-gold uppercase tracking-wider">Nome</th>
                             <th className="px-4 py-2 text-left text-xs font-bold text-gold uppercase tracking-wider">Email</th>
+                            {isBoss && <th className="px-4 py-2 text-left text-xs font-bold text-gold uppercase tracking-wider">ID / Código de Acesso</th>}
                             <th className="px-4 py-2 text-left text-xs font-bold text-gold uppercase tracking-wider">Curso</th>
                             <th className="px-4 py-2 text-left text-xs font-bold text-gold uppercase tracking-wider">Cargos</th>
                         </tr>
@@ -103,6 +111,13 @@ const StudentsPanel: React.FC<{ currentUser: UserData | null }> = memo(({ curren
                             <tr key={user.id} className="hover:bg-light-hover dark:hover:bg-dark-hover/50 transition-colors">
                                 <td className="px-4 py-3 whitespace-nowrap text-sm font-semibold text-light-text-primary dark:text-dark-text-primary">{user.name}</td>
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-light-text-secondary dark:text-dark-text-secondary">{user.email}</td>
+                                {isBoss && (
+                                    <td className="px-4 py-3 whitespace-nowrap text-sm font-mono text-light-text-secondary dark:text-dark-text-secondary">
+                                        <span className="font-semibold text-light-text-primary dark:text-dark-text-primary">{user.id}</span>
+                                        <span className="mx-1">/</span>
+                                        <span>{getAccessCodeForUser(user.id)}</span>
+                                    </td>
+                                )}
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-light-text-secondary dark:text-dark-text-secondary">{user.courseType}</td>
                                 <td className="px-4 py-3 whitespace-nowrap text-sm text-light-text-secondary dark:text-dark-text-secondary font-medium">{formatRoles(user.roles)}</td>
                             </tr>
