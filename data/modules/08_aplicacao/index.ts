@@ -13,6 +13,10 @@ export const aplicacaoSection: CourseSection = {
       '**Preparação dos Cílios Naturais:** Com uma microbrush ou um aplicador de batom descartável, aplique uma pequena quantidade de %%primer específico%% para extensões de cílios. Passe o primer da base até as pontas dos cílios naturais, garantindo que todos os fios estejam limpos e prontos para receber a cola. O primer otimiza a aderência e prolonga a durabilidade das extensões.',
       '**Penteando e Analisando:** Com uma escovinha de cílios, penteie delicadamente os cílios naturais, alinhando-os. Observe a curvatura, espessura e saúde dos fios. Esta análise é fundamental para escolher o tipo de extensão mais adequado e criar um design harmonioso.'
     ]},
+    { type: 'image_carousel', content: { 
+        caption: 'Etapas da preparação: Higienização, isolamento dos fios inferiores e aplicação do primer.', 
+        images: ['/images/aplicacao_1_1.png', '/images/aplicacao_1_2.png', '/images/aplicacao_1_3.png'] 
+    } },
     { type: 'subsection_title', id: 'aplicacao_tecnica', content: '7.2. Técnica de Aplicação Fio a Fio (Clássico)' },
     { type: 'paragraph', content: 'Para iniciantes, a técnica fio a fio é o ponto de partida ideal.' },
     { type: 'list', content: [
@@ -23,6 +27,10 @@ export const aplicacaoSection: CourseSection = {
       '**Direcionamento:** Certifique-se de que a extensão esteja com o direcionamento correto, acompanhando a curvatura natural dos cílios.',
       '**Repetição e Penteado:** Repita o processo em todos os cílios, trabalhando de forma organizada e simétrica nos dois olhos. A cada %%5-10 aplicações%%, penteie os cílios com a escovinha para verificar a direção e garantir que não há fios grudados.'
     ]},
+    { type: 'image_carousel', content: { 
+        caption: 'O processo de acoplagem: isolamento do fio natural e aplicação da extensão.', 
+        images: ['/images/aplicacao_2_1.png', '/images/aplicacao_2_2.png'] 
+    } },
     { type: 'subsection_title', id: 'aplicacao_dicas', content: '7.3. Dicas Cruciais para a Aplicação' },
     { type: 'list', content: [
       '**Iluminação Adequada:** Tenha uma %%boa iluminação%% (preferencialmente luz LED fria) para visualizar cada fio com clareza.',
@@ -31,6 +39,10 @@ export const aplicacaoSection: CourseSection = {
       '**Umidificador/Nano Mister:** Ao finalizar a aplicação, utilize um %%nano mister ou umidificador%% com água destilada para acelerar a polimerização da cola e reduzir a incidência de vapores, diminuindo a chance de ardência e irritação. Faça isso a uma distância de %%15-20 cm%% dos olhos da cliente por cerca de 30-60 segundos.',
       '**Flash Cure e Solução Aceleradora:** São produtos que aceleram a polimerização (secagem) do adesivo. O **Flash Cure** é um aparelho de luz UV/LED que promove uma cura quase instantânea da cola, aplicado por 1-2 segundos após acoplar alguns fios. A **Solução Aceleradora** é um líquido aplicado com microbrush na base dos fios (na tira, antes de acoplar). %%Use-os com cautela%% e seguindo as instruções do fabricante, pois o uso incorreto pode comprometer a retenção e a saúde dos fios.'
     ]},
+    { type: 'image_carousel', content: { 
+        caption: 'Ferramentas que auxiliam na aplicação: boa iluminação e nano mister.', 
+        images: ['/images/aplicacao_3_1.png', '/images/aplicacao_3_2.png'] 
+    } },
     { type: 'subsection_title', id: 'aplicacao_finalizacao', content: '7.4. Finalização da Aplicação' },
     { type: 'paragraph', content: 'Após a aplicação de todas as extensões e a utilização do nano mister, há alguns passos importantes para garantir o conforto da cliente e a durabilidade do trabalho:' },
     { type: 'list', content: [
@@ -39,6 +51,10 @@ export const aplicacaoSection: CourseSection = {
       '**Remoção dos Pads/Fita:** Remova os pads de gel ou a fita micropore da pálpebra inferior com delicadeza. Peça para a cliente %%abrir os olhos lentamente%%, verificando se há qualquer desconforto ou ardência.',
       '**Penteado e Orientação:** Penteie os cílios gentilmente com uma escovinha descartável e entregue-a para a cliente. Forneça todas as %%orientações de cuidados%% pós-aplicação.',
       '**Feedback da Cliente:** Pergunte à cliente se ela sentiu algum desconforto durante o procedimento e se está satisfeita com o resultado. O feedback dela é valioso para o seu aprimoramento.'
-    ]}
+    ]},
+    { type: 'image_carousel', content: { 
+        caption: 'Finalização: verificação de fios grudados e escovação final.', 
+        images: ['/images/aplicacao_4_1.png', '/images/aplicacao_4_2.png'] 
+    } }
   ]
 };

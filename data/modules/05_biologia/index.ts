@@ -12,7 +12,15 @@ export const biologiaSection: CourseSection = {
       '**2. Catágena (Adolescente):** Fase de transição, o fio para de crescer. %%**É A FASE IDEAL**%% para a aplicação.',
       '**3. Telógena (Adulto):** Fase de repouso. O fio está "solto", prestes a cair. A extensão cairá junto com ele. É por isso que a manutenção é necessária.'
     ]},
+    { type: 'image_carousel', content: { 
+        caption: 'O ciclo de vida dos cílios: Anágena, Catágena e Telógena.', 
+        images: ['/images/biologia_1_1.png'] 
+    } },
     { type: 'subsection_title', id: 'biologia_alergias', content: '4.2. Alergias vs. Irritação: Como Identificar, Prevenir e Agir' },
+    { type: 'image_carousel', content: { 
+        caption: 'Diferença visual entre irritação (vermelhidão no globo ocular) e alergia (inchaço na pálpebra).', 
+        images: ['/images/biologia_2_1.png', '/images/biologia_2_2.png'] 
+    } },
     { type: 'table', content: {
       headers: ['Característica', 'Irritação Química (Comum)', 'Reação Alérgica (Rara)'],
       rows: [
@@ -27,8 +35,16 @@ export const biologiaSection: CourseSection = {
       '**Absolutas (NÃO FAZER):** Cliente com %%conjuntivite, blefarite, terçol%%, a passar por %%quimioterapia%%, ou com qualquer infeção ocular ativa.',
       '**Relativas (AVALIAR COM CUIDADO):** Cliente %%grávida ou a amamentar%% (pedir autorização médica), com olhos muito sensíveis, com gripe ou alergias respiratórias fortes no dia.'
     ]},
+    { type: 'image_carousel', content: { 
+        caption: 'Exemplos de condições que são contraindicações: blefarite e terçol.', 
+        images: ['/images/biologia_3_1.png', '/images/biologia_3_2.png'] 
+    } },
     { type: 'subsection_title', id: 'biologia_anamnese', content: '4.4. Ficha de Anamnese: A sua Ferramenta de Segurança Profissional' },
     { type: 'paragraph', content: 'É um questionário %%obrigatório%% que a cliente preenche e assina ANTES do primeiro procedimento. Ele protege você e a cliente. Perguntas essenciais de EXEMPLO:' },
+    { type: 'image_carousel', content: { 
+        caption: 'Modelo de Ficha de Anamnese preenchida.', 
+        images: ['/images/biologia_4_1.png'] 
+    } },
     { type: 'list', content: [
       'Já fez extensão de cílios antes? Teve alguma reação?',
       'Tem alergia a algum produto cosmético, esparadrapo ou látex?',

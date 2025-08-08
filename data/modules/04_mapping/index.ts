@@ -10,9 +10,9 @@ export const mappingSection: CourseSection = {
     { type: 'image_carousel', content: { 
         caption: 'Ilustração clara dos 3 formatos de olho com o desenho do mapping sobre eles: Boneca, Gatinho e Esquilo, mostrando a distribuição dos tamanhos.', 
         images: [
-            'https://placehold.co/600x400/d4af37/121212?text=Design%5CnBoneca', 
-            'https://placehold.co/600x400/d4af37/121212?text=Design%5CnGatinho', 
-            'https://placehold.co/600x400/d4af37/121212?text=Design%5CnEsquilo'
+            '/images/mapping_1_1.png', 
+            '/images/mapping_1_2.png', 
+            '/images/mapping_1_3.png'
         ] 
     } },
     { type: 'list', content: [
@@ -22,6 +22,14 @@ export const mappingSection: CourseSection = {
     ]},
     { type: 'subsection_title', id: 'mapping_visagismo', content: '3.2. Visagismo: A Arte de Personalizar para Cada Rosto e Olho' },
     { type: 'paragraph', content: '%%Visagismo%% é analisar as características únicas da cliente para criar o design perfeito.'},
+    { type: 'image_carousel', content: { 
+        caption: 'Exemplos de formatos de olho: Amendoado, Redondo e Caído.', 
+        images: [
+            '/images/mapping_2_1.png',
+            '/images/mapping_2_2.png',
+            '/images/mapping_2_3.png'
+        ] 
+    } },
     { type: 'table', content: {
         headers: ['Formato do Olho', 'Objetivo', 'Mapping Recomendado'],
         rows: [
@@ -38,8 +46,8 @@ export const mappingSection: CourseSection = {
         '3. Anote os tamanhos em cada secção de acordo com o design escolhido. Lembre-se de usar tamanhos menores (%%7-8mm%%) nos cantos internos para um acabamento natural.'
     ]},
      { type: 'image_carousel', content: { 
-        caption: 'Espaço para Prática: Desenhe aqui os 3 tipos de mapping, distribuindo os tamanhos dos fios: Boneca: Gatinho: Esquilo:', 
-        images: ['https://placehold.co/600x400/F9F9F9/1A1A1A?text=Desenhe+aqui...'] 
+        caption: 'Exemplo de mapping desenhado no pad e espaço para sua prática.', 
+        images: ['/images/mapping_3_1.png', '/images/mapping_3_2.png'] 
     } },
   ]
 };

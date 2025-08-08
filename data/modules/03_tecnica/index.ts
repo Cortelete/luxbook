@@ -14,9 +14,9 @@ export const tecnicaSection: CourseSection = {
     { type: 'image_carousel', content: { 
         caption: 'Ilustração detalhada mostrando a acoplagem correta, a distância da pálpebra, e exemplos de erros comuns: muita cola, base solta, colada na pele.', 
         images: [
-            'https://placehold.co/600x400/d4af37/121212?text=Acoplagem%5CnCorreta', 
-            'https://placehold.co/600x400/d4af37/121212?text=Erro:%5CnBase+Solta', 
-            'https://placehold.co/600x400/d4af37/121212?text=Erro:%5CnColado+na+Pele'
+            '/images/tecnica_1_1.png', 
+            '/images/tecnica_1_2.png', 
+            '/images/tecnica_1_3.png'
         ] 
     } },
     { type: 'table', content: {
@@ -29,6 +29,14 @@ export const tecnicaSection: CourseSection = {
     }},
     { type: 'subsection_title', id: 'tecnica_tipos', content: '2.2. Tipos de Fios e Técnicas: O seu Menu de Estilos' },
     { type: 'paragraph', content: 'Antes dos volumes, veio o %%Clássico Fio a Fio%%: a técnica de aplicar uma única extensão por fio natural. Hoje, os %%Volumes Tecnológicos%% dominam o mercado pela praticidade e qualidade. Existe o %%fio Ellipse%%, que é oco por dentro, sendo por isso mais macio e o mais indicado para aplicação em clientes. Já o %%fio cônico%% é mais adequado para treinos, por serem mais resistentes.' },
+    { type: 'image_carousel', content: { 
+        caption: 'Diferentes fans tecnológicos: Fio Y, Fio W e Volume Russo.', 
+        images: [
+            '/images/tecnica_2_1.png',
+            '/images/tecnica_2_2.png',
+            '/images/tecnica_2_3.png'
+        ] 
+    } },
     { type: 'table', content: {
         headers: ['Técnica / Volume', 'Formato do Fio', 'Efeito Criado', 'Ideal Para'],
         rows: [
@@ -46,6 +54,14 @@ export const tecnicaSection: CourseSection = {
       '**Tamanhos:** Medidos em milímetros (mm), geralmente de %%8mm a 15mm%%.',
       '**Curvaturas:** A curvatura define o nível de "curvatura" do fio.'
     ]},
+     { type: 'image_carousel', content: { 
+        caption: 'Comparativo das curvaturas mais comuns: C, D e M.', 
+        images: [
+            '/images/tecnica_3_1.png',
+            '/images/tecnica_3_2.png',
+            '/images/tecnica_3_3.png'
+        ] 
+    } },
     { type: 'table', content: {
       headers: ['Curvatura', 'Nível de Curvatura', 'Efeito'],
       rows: [
@@ -57,6 +73,10 @@ export const tecnicaSection: CourseSection = {
     }},
     { type: 'subsection_title', id: 'tecnica_analise', content: '2.4. Análise do Fio Natural: A Regra de Ouro da Saúde Ocular' },
     { type: 'note', content: 'Atenção Máxima: A saúde do fio natural da sua cliente é a sua prioridade. Antes de tocar em qualquer extensão, você deve fazer uma análise criteriosa.' },
+    { type: 'image_carousel', content: { 
+        caption: 'Analisando a saúde e direção do fio natural antes do procedimento.', 
+        images: [ '/images/tecnica_4_1.png' ] 
+    } },
     { type: 'subtitle', content: 'Checklist de Análise do Fio Natural:' },
     { type: 'checklist', content: [
       '**Comprimento:** O fio natural é curto, médio ou longo? (A extensão pode ter no máximo %%2-3mm a mais%% que o fio natural).',
