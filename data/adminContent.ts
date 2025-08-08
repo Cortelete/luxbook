@@ -8,6 +8,6 @@ import { CourseSection } from './lib/types';
 export const adminSection: CourseSection = {
   id: 'admin',
   title: 'Painel Admin',
-  brief: 'Gerencie alunas, códigos e módulos.',
+  brief: 'Gerencie usuários, códigos e módulos.',
   content: [], // The content is custom-rendered by the AdminPanel component.
 };
