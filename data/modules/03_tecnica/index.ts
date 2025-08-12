@@ -16,7 +16,17 @@ export const tecnicaSection: CourseSection = {
         images: [
             '/images/tecnica_1_1.png', 
             '/images/tecnica_1_2.png', 
-            '/images/tecnica_1_3.png'
+            '/images/tecnica_1_3.png',
+            '/images/tecnica_1_4.png',
+            '/images/tecnica_1_5.png',
+            '/images/tecnica_1_6.png',
+            '/images/tecnica_1_7.png',
+            '/images/tecnica_1_8.png',
+            '/images/tecnica_1_9.png',
+            '/images/tecnica_1_10.png',
+            '/images/tecnica_1_11.png',
+            '/images/tecnica_1_12.png',
+            '/images/tecnica_1_13.png'
         ] 
     } },
     { type: 'table', content: {
