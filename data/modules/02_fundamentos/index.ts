@@ -17,7 +17,11 @@ export const fundamentosSection: CourseSection = {
         caption: 'Exemplos de looks possíveis com a extensão de cílios, do natural ao glamoroso.', 
         images: [
             '/images/fundamentos_1_1.png', 
-            '/images/fundamentos_1_2.png'
+            '/images/fundamentos_1_2.png',
+            '/images/fundamentos_1_3.png',
+            '/images/fundamentos_1_4.png',
+            '/images/fundamentos_1_5.png',
+            '/images/fundamentos_1_6.png'
         ] 
     } },
     { type: 'subsection_title', id: 'fundamentos_ciclo', content: '1.2. O Ciclo do Serviço: Aplicação, Manutenção e Remoção' },
@@ -32,7 +36,14 @@ export const fundamentosSection: CourseSection = {
         images: [
             '/images/fundamentos_2_1.png', 
             '/images/fundamentos_2_2.png',
-            '/images/fundamentos_2_3.png'
+            '/images/fundamentos_2_3.png',
+            '/images/fundamentos_2_4.png',
+            '/images/fundamentos_2_5.png',
+            '/images/fundamentos_2_6.png',
+            '/images/fundamentos_2_7.png',
+            '/images/fundamentos_2_8.png',
+            '/images/fundamentos_2_9.png',
+            '/images/fundamentos_2_10.png'
         ] 
     } }
   ]
