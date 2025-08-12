@@ -60,7 +60,7 @@ const Login: React.FC<LoginProps> = memo(({ onLoginSuccess }) => {
         <div className="flex items-center justify-center min-h-screen bg-light-bg dark:bg-dark-bg p-4 font-sans">
             <div className="w-full max-w-sm mx-auto">
                 <div className="text-center mb-8">
-                     <h1 className="text-4xl font-bold text-gold">Luxury Academy</h1>
+                     <img src="/logo.png" alt="Luxury Academy Logo" className="w-56 mx-auto mb-4" />
                      <p className="text-light-text-secondary dark:text-dark-text-secondary mt-2">
                         Acesso exclusivo para alunas
                      </p>

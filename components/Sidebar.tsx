@@ -98,8 +98,8 @@ const Sidebar: React.FC<SidebarProps> = memo(({ sections, activeSectionId, onSel
         <div className="h-full px-3 py-4 flex flex-col">
           {/* Header */}
           <div className={`flex items-center mb-6 px-2 transition-all duration-300 flex-shrink-0 ${isCollapsed ? 'justify-center' : 'justify-between'}`}>
-            {!isCollapsed && <h2 className="text-xl font-semibold text-gold">Luxury Academy</h2>}
-             {isCollapsed && <h2 className="text-xl font-semibold text-gold">LA</h2>}
+            <img src="/logo.png" alt="Luxury Academy Logo" className={`transition-all duration-300 ${isCollapsed ? 'h-10' : 'h-12'}`} />
+            
             <button onClick={onClose} className="md:hidden text-light-text-primary dark:text-dark-text-primary hover:text-gold">
               <CloseIcon className="w-6 h-6" />
             </button>

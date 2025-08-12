@@ -202,7 +202,7 @@ const App: React.FC = () => {
                   >
                     <MenuIcon className="w-6 h-6" />
                   </button>
-                  <h1 className="text-lg font-bold text-gold">Luxury Academy</h1>
+                  <img src="/logo.png" alt="Luxury Academy Logo" className="h-10" />
                 </div>
                 <button 
                   onClick={toggleTheme}
