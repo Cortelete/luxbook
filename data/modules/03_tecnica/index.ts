@@ -23,10 +23,7 @@ export const tecnicaSection: CourseSection = {
             '/images/tecnica_1_7.png',
             '/images/tecnica_1_8.png',
             '/images/tecnica_1_9.png',
-            '/images/tecnica_1_10.png',
-            '/images/tecnica_1_11.png',
-            '/images/tecnica_1_12.png',
-            '/images/tecnica_1_13.png'
+            '/images/tecnica_1_10.png'
         ] 
     } },
     { type: 'table', content: {
