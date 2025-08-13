@@ -16,8 +16,7 @@ export const biologiaSection: CourseSection = {
         caption: 'O ciclo de vida dos cílios: Anágena, Catágena e Telógena.', 
         images: [
           '/images/biologia_1_1.png',
-          '/images/biologia_1_2.png',
-          '/images/biologia_1_3.png'
+          '/images/biologia_1_2.png'
         ] 
     } },
     { type: 'subsection_title', id: 'biologia_alergias', content: '4.2. Alergias vs. Irritação: Como Identificar, Prevenir e Agir' },
