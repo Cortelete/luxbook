@@ -36,11 +36,10 @@ export const tecnicaSection: CourseSection = {
     { type: 'subsection_title', id: 'tecnica_tipos', content: '2.2. Tipos de Fios e Técnicas: O seu Menu de Estilos' },
     { type: 'paragraph', content: 'Antes dos volumes, veio o %%Clássico Fio a Fio%%: a técnica de aplicar uma única extensão por fio natural. Hoje, os %%Volumes Tecnológicos%% dominam o mercado pela praticidade e qualidade. Existe o %%fio Ellipse%%, que é oco por dentro, sendo por isso mais macio e o mais indicado para aplicação em clientes. Já o %%fio cônico%% é mais adequado para treinos, por serem mais resistentes.' },
     { type: 'image_carousel', content: { 
-        caption: 'Diferentes fans tecnológicos: Fio Y, Fio W e Volume Russo.', 
+        caption: 'Diferentes fios tecnológicos: Fio Y, Fio W e Volume Russo.', 
         images: [
             '/images/tecnica_2_1.png',
-            '/images/tecnica_2_2.png',
-            '/images/tecnica_2_3.png'
+            '/images/tecnica_2_2.png'
         ] 
     } },
     { type: 'table', content: {
