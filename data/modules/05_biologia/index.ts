@@ -22,7 +22,11 @@ export const biologiaSection: CourseSection = {
     { type: 'subsection_title', id: 'biologia_alergias', content: '4.2. Alergias vs. Irritação: Como Identificar, Prevenir e Agir' },
     { type: 'image_carousel', content: { 
         caption: 'Diferença visual entre irritação (vermelhidão no globo ocular) e alergia (inchaço na pálpebra).', 
-        images: ['/images/biologia_2_1.png', '/images/biologia_2_2.png'] 
+        images: [
+          '/images/biologia_2_1.png', 
+          '/images/biologia_2_2.png',
+          '/images/biologia_2_3.png'
+        ] 
     } },
     { type: 'table', content: {
       headers: ['Característica', 'Irritação Química (Comum)', 'Reação Alérgica (Rara)'],
