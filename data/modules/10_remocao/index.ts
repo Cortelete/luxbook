@@ -11,10 +11,6 @@ export const remocaoSection: CourseSection = {
       '**Proteção da Pálpebra Inferior:** Peça para a cliente deitar-se confortavelmente. Utilize pads de gel ou fita micropore na pálpebra inferior, protegendo a pele e garantindo que o produto removedor %%não entre em contato direto%% com a pele ou os olhos.',
       '**Orientação à Cliente:** Explique à cliente que ela precisará manter os %%olhos bem fechados%% durante todo o processo.'
     ]},
-    { type: 'image_carousel', content: { 
-        caption: 'Protegendo a área dos olhos com pads antes de aplicar o removedor.', 
-        images: ['/images/remocao_1_1.png'] 
-    } },
     { type: 'subsection_title', id: 'remocao_tecnica', content: '9.2. Técnica de Remoção com Produto Específico' },
     { type: 'paragraph', content: 'Existem dois tipos principais de removedores: em %%creme/pasta%% e em %%gel%%. A escolha depende da sua preferência e do que você considera mais seguro e eficiente.' },
     { type: 'list', content: [
@@ -23,28 +19,16 @@ export const remocaoSection: CourseSection = {
       '**Remoção das Extensões:** Com um microbrush limpo e seco, comece a deslizar as extensões suavemente para fora dos cílios naturais. Se alguma não sair, aplique mais removedor.',
       '**Limpeza dos Resíduos:** É crucial %%remover todo o resíduo%% de cola e removedor. Use algodão umedecido em água destilada, depois shampoo para cílios para uma higienização completa.'
     ]},
-    { type: 'image_carousel', content: { 
-        caption: 'Aplicando o removedor em creme na base das extensões.', 
-        images: ['/images/remocao_2_1.png'] 
-    } },
     { type: 'subsection_title', id: 'remocao_manual', content: '9.3. Remoção Manual (para casos específicos)' },
     { type: 'list', content: [
       '**Isolamento e Puxada Delicada:** Usada em manutenções. Com a pinça de isolamento, separe o fio natural. Com a pinça reta, segure a extensão na base e, com um movimento suave e sem força, puxe-a na direção do crescimento. %%Se houver resistência, não force%%.'
     ]},
-    { type: 'image_carousel', content: { 
-        caption: 'Técnica de remoção manual para fios com adesão fraca (usar com cautela).', 
-        images: ['/images/remocao_3_1.png'] 
-    } },
     { type: 'subsection_title', id: 'remocao_finalizacao', content: '9.4. Finalização e Pós-Remoção' },
     { type: 'list', content: [
       '**Análise dos Cílios Naturais:** Após a remoção completa, inspecione os cílios naturais da cliente. Eles devem estar %%íntegros e saudáveis%%.',
       '**Penteado:** Penteie os cílios naturais com uma escovinha limpa.',
       '**Recomendações:** Oriente a cliente sobre os cuidados pós-remoção, caso ela deseje dar um tempo sem extensões.'
     ]},
-    { type: 'image_carousel', content: { 
-        caption: 'Cílios naturais saudáveis após a remoção completa.', 
-        images: ['/images/remocao_4_1.png'] 
-    } },
     { type: 'note', content: 'Parabéns! Você concluiu a etapa mais densa e técnica da sua formação. O que aprendeu aqui é a fundação de todo o seu trabalho. Releia, pratique em esponjas e bonecas, e familiarize-se com cada conceito. A repetição leva à perfeição.'}
   ]
 };

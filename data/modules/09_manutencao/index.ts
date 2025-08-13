@@ -13,10 +13,6 @@ export const manutencaoSection: CourseSection = {
       '**Isolamento dos Cílios Inferiores:** Como na aplicação, utilize pads de gel ou fita micropore.',
       '**Finalização igual aplicação (Consultar 7.4.)**'
     ]},
-    { type: 'image_carousel', content: { 
-        caption: 'Analisando o estado das extensões no retorno da cliente para manutenção.', 
-        images: ['/images/manutencao_1_1.png'] 
-    } },
     { type: 'subsection_title', id: 'manutencao_remocao', content: '8.2. Remoção de Extensões Crescidas ou Soltas' },
     { type: 'list', content: [
       '**Remoção de Extensões Soltas:** Extensões que estão prestes a cair ou já estão muito soltas podem ser removidas delicadamente com a pinça.',
@@ -24,10 +20,6 @@ export const manutencaoSection: CourseSection = {
       '**Remoção Manual (para fios que se soltam facilmente):** Às vezes, as extensões que cresceram muito já estão com a adesão fraca. Nestes casos, com a pinça, você pode gentilmente deslizar a extensão para fora do fio natural.',
       '**Evitar cristalização da cola residual:** Passe a pinça da base até a ponta, em seguida um lenço para ter certeza de que todo produto foi retirado %%antes da higienização%%.'
     ]},
-    { type: 'image_carousel', content: { 
-        caption: 'Removendo com cuidado uma extensão que cresceu junto com o fio natural.', 
-        images: ['/images/manutencao_2_1.png'] 
-    } },
     { type: 'subsection_title', id: 'manutencao_preenchimento', content: '8.3. Preenchimento de Falhas e Realinhamento' },
     { type: 'list', content: [
       '**Preparação dos Fios Naturais:** Após remover as extensões necessárias, penteie os cílios naturais novamente e aplique uma pequena quantidade de %%primer%% nos fios que irão receber as novas extensões.',
@@ -36,7 +28,10 @@ export const manutencaoSection: CourseSection = {
     ]},
     { type: 'image_carousel', content: { 
         caption: 'Preenchendo as falhas com novas extensões para restaurar o design.', 
-        images: ['/images/manutencao_3_1.png'] 
+        images: [
+          '/images/manutencao_3_1.png',
+          '/images/manutencao_3_2.png'
+        ] 
     } }
   ]
 };

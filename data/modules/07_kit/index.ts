@@ -19,10 +19,6 @@ export const kitSection: CourseSection = {
           '**Termo-higrômetro:** Medidor de temperatura e umidade. %%**OBRIGATÓRIO.**%%',
           '**Ventilador Portátil:** Para ajudar na secagem e aliviar qualquer desconforto da cliente.'
       ]},
-      { type: 'image_carousel', content: { 
-          caption: 'Exemplo de um kit inicial completo para uma Lash Designer.', 
-          images: ['/images/kit_1_1.png'] 
-      } },
       { type: 'subsection_title', id: 'kit_adesivo', content: '6.2. O Adesivo (Cola): A Ciência por Trás da Retenção Perfeita' },
       { type: 'paragraph', content: 'O principal componente da cola é o %%Cianoacrilato%%. Ele polimeriza (seca) em contato com a umidade do ar.' },
       { type: 'list', content: [
@@ -32,7 +28,10 @@ export const kitSection: CourseSection = {
       ]},
       { type: 'image_carousel', content: { 
           caption: 'Adesivo: gota perfeita vs. gota oxidada, e armazenamento com sílica.', 
-          images: ['/images/kit_2_1.png', '/images/kit_2_2.png'] 
+          images: [
+            '/images/kit_2_1.png', 
+            '/images/kit_2_2.png'
+        ] 
       } },
       { type: 'table', content: {
           headers: ['Fator', 'Impacto na Cola', 'Solução'],
