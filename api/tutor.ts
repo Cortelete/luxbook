@@ -54,15 +54,12 @@ function stringifyItem(item: ContentItem): string {
  */
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     // 1. Validação do Método da Requisição
-    // Garante que apenas requisições do tipo POST sejam aceitas.
     if (req.method !== 'POST') {
         res.setHeader('Allow', 'POST');
         return res.status(405).end('Method Not Allowed');
     }
 
     // 2. Segurança da Chave de API
-    // Pega a chave da API das variáveis de ambiente do servidor Vercel.
-    // Isso garante que a chave NUNCA seja exposta no código do navegador.
     const apiKey = process.env.API_KEY;
     if (!apiKey) {
         console.error("Vercel Serverless: A variável de ambiente API_KEY não foi definida.");
@@ -81,18 +78,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Converte o conteúdo da seção do curso em uma string de texto limpa para ser usada como contexto.
         const context = `${activeSection.title}\n\n${activeSection.content.map(stringifyItem).filter(Boolean).join('\n\n')}`;
         
-        // A instrução do sistema guia o comportamento da IA.
-        const systemInstruction = `Você é um tutor especialista em design de cílios, assistente de Joyci Almeida. Sua base de conhecimento é estritamente o manual de treinamento fornecido. Responda às perguntas dos alunos de forma clara, precisa e amigável, baseando-se apenas no conteúdo do seguinte manual: \n\n---\n${context}\n---\n\nSe a pergunta não puder ser respondida usando o manual, informe educadamente que você só pode responder a perguntas relacionadas ao conteúdo do módulo atual. Não invente informações. Mantenha as respostas concisas e diretas. Use markdown para formatação (negrito com **, listas com -) quando apropriado.`;
+        // A instrução do sistema define a persona e as regras do modelo.
+        const systemInstruction = `Você é um tutor especialista em design de cílios, assistente de Joyci Almeida. Responda às perguntas dos alunos de forma clara, precisa e amigável, baseando-se **estritamente** no manual fornecido. Se a resposta não puder ser encontrada no manual, informe educadamente que você só pode responder a perguntas relacionadas ao conteúdo do módulo atual. Não invente informações. Mantenha as respostas concisas e diretas. Use markdown para formatação (negrito com **, listas com -) quando apropriado.`;
+
+        // O prompt do usuário agora inclui o contexto e a pergunta de forma estruturada.
+        const userPrompt = `Com base no seguinte manual, responda à pergunta da aluna.\n\nMANUAL:\n---\n${context}\n---\n\nPERGUNTA: "${question}"`;
 
         // 5. Chamada da API do Gemini
         const ai = new GoogleGenAI({ apiKey });
 
         const response: GenerateContentResponse = await ai.models.generateContent({
             model: 'gemini-2.5-flash',
-            contents: question,
+            contents: userPrompt, // Enviando o prompt estruturado.
             config: {
-                systemInstruction: systemInstruction,
-                temperature: 0.4, // Um pouco mais determinístico para um tutor
+                systemInstruction: systemInstruction, // Enviando as regras e persona.
+                temperature: 0.3, // Mais factual para um tutor.
                 topK: 32,
                 topP: 0.9,
             },
