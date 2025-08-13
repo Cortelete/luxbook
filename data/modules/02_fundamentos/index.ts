@@ -31,20 +31,6 @@ export const fundamentosSection: CourseSection = {
       '**2. Manutenção (A Fidelização):** Realizada a cada %%15 a 21 dias%%. Neste serviço, você higieniza, remove as extensões que cresceram junto com o fio natural e preenche as falhas. Uma manutenção bem-feita garante um look impecável e a saúde dos fios, sendo a chave para %%fidelizar a cliente%%. Considera-se manutenção quando a cliente retorna com, no mínimo, %%50% das extensões%%.',
       '**3. Remoção (O Cuidado Final):** É a retirada completa e segura de todas as extensões, utilizando um produto específico ou manually. É um procedimento delicado que, quando bem executado, mostra o seu %%profissionalismo e cuidado%% com a saúde da cliente.'
     ]},
-    { type: 'image_carousel', content: { 
-        caption: 'As fases do serviço: a aplicação inicial, a manutenção periódica e a remoção segura.', 
-        images: [
-            '/images/fundamentos_2_1.png', 
-            '/images/fundamentos_2_2.png',
-            '/images/fundamentos_2_3.png',
-            '/images/fundamentos_2_4.png',
-            '/images/fundamentos_2_5.png',
-            '/images/fundamentos_2_6.png',
-            '/images/fundamentos_2_7.png',
-            '/images/fundamentos_2_8.png',
-            '/images/fundamentos_2_9.png',
-            '/images/fundamentos_2_10.png'
-        ] 
-    } }
+
   ]
 };

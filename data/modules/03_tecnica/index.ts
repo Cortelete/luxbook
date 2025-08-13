@@ -81,7 +81,18 @@ export const tecnicaSection: CourseSection = {
     { type: 'note', content: 'Atenção Máxima: A saúde do fio natural da sua cliente é a sua prioridade. Antes de tocar em qualquer extensão, você deve fazer uma análise criteriosa.' },
     { type: 'image_carousel', content: { 
         caption: 'Analisando a saúde e direção do fio natural antes do procedimento.', 
-        images: [ '/images/tecnica_4_1.png' ] 
+        images: [ 
+          '/images/tecnica_4_1.png',
+          '/images/tecnica_4_2.png',
+          '/images/tecnica_4_3.png',
+          '/images/tecnica_4_4.png',
+          '/images/tecnica_4_5.png',
+          '/images/tecnica_4_6.png',
+          '/images/tecnica_4_7.png',
+          '/images/tecnica_4_8.png',
+          '/images/tecnica_4_9.png',
+          '/images/tecnica_4_10.png'
+        ] 
     } },
     { type: 'subtitle', content: 'Checklist de Análise do Fio Natural:' },
     { type: 'checklist', content: [
