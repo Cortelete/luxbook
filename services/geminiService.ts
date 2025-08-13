@@ -16,31 +16,41 @@ import { CourseSection } from '../lib/types';
  */
 export const askAiTutor = async (question: string, activeSection: CourseSection): Promise<string> => {
     try {
-        // Faz a chamada para a nossa API de backend segura ('/api/tutor').
         const response = await fetch('/api/tutor', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            // Envia a pergunta e a seção ativa no corpo da requisição em formato JSON.
-            // O backend usará 'activeSection' para construir o contexto.
             body: JSON.stringify({ question, activeSection }),
         });
 
-        const data = await response.json();
+        const responseBody = await response.text();
 
-        // Se a resposta do nosso backend não for bem-sucedida (ex: erro 500, 400),
-        // lança um erro com a mensagem que o backend nos enviou.
         if (!response.ok) {
-            throw new Error(data.error || 'Falha ao buscar resposta do Tutor IA.');
+            let errorMessage = `Falha de comunicação com o servidor (${response.status})`;
+            try {
+                // Tenta interpretar o corpo do erro como JSON, que é o esperado da nossa API
+                const errorData = JSON.parse(responseBody);
+                errorMessage = errorData.error || errorData.details || errorMessage;
+            } catch (e) {
+                // Se não for JSON, é um erro inesperado (ex: página HTML de erro da Vercel)
+                console.error("Servidor retornou uma resposta não-JSON:", responseBody);
+            }
+            throw new Error(errorMessage);
         }
 
-        // Se tudo correu bem, retorna o texto da resposta da IA.
+        const data = JSON.parse(responseBody);
+
+        if (!data.text) {
+             throw new Error("A resposta do Tutor IA está vazia.");
+        }
+        
         return data.text;
 
     } catch (error) {
         console.error("Erro ao chamar a API do Tutor IA via frontend service:", error);
         if (error instanceof Error) {
+            // A mensagem de erro agora será mais informativa.
             return `Desculpe, ocorreu um erro ao contatar o Tutor IA: ${error.message}`;
         }
         return "Desculpe, ocorreu um erro desconhecido ao contatar o Tutor IA. Por favor, tente novamente mais tarde.";

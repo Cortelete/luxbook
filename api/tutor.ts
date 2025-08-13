@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenAI } from '@google/genai';
 import { CourseSection, ContentItem, TableData } from '../lib/types';
 
 /**
@@ -98,22 +98,28 @@ PERGUNTA DA ALUNA:
 `.trim();
 
     // Inicializa cliente Gemini
-    const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({
-      model: 'gemini-2.0-flash',
-      systemInstruction,
-    });
-
+    const ai = new GoogleGenAI({ apiKey });
+    
     // Gera resposta
-    const result = await model.generateContent(userPrompt);
+    const geminiResponse = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: userPrompt,
+      config: {
+        systemInstruction: systemInstruction,
+      },
+    });
+    
+    const textResponse = geminiResponse.text;
+    if (!textResponse) {
+        throw new Error('Não foi possível gerar resposta do modelo de IA.');
+    }
 
-    const textResponse = result?.response?.text?.() || 'Não foi possível gerar resposta.';
     res.status(200).json({ text: textResponse });
   } catch (error: any) {
     console.error('Erro ao chamar Tutor IA:', error);
     res.status(500).json({
       error: 'Erro interno ao processar a solicitação do Tutor IA.',
-      details: error?.message || error,
+      details: error?.message || error.toString(),
     });
   }
 }
