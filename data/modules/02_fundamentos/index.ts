@@ -21,7 +21,7 @@ export const fundamentosSection: CourseSection = {
             '/images/fundamentos_1_3.png',
             '/images/fundamentos_1_4.png',
             '/images/fundamentos_1_5.png',
-            '/images/fundamentos_1_6.png'
+            '/images/fundamentos_1_6.png',
         ] 
     } },
     { type: 'subsection_title', id: 'fundamentos_ciclo', content: '1.2. O Ciclo do Serviço: Aplicação, Manutenção e Remoção' },
