@@ -27,7 +27,9 @@ export const mappingSection: CourseSection = {
         images: [
             '/images/mapping_2_1.png',
             '/images/mapping_2_2.png',
-            '/images/mapping_2_3.png'
+            '/images/mapping_2_3.png',
+            '/images/mapping_2_4.png'
+            
         ] 
     } },
     { type: 'table', content: {
@@ -47,7 +49,10 @@ export const mappingSection: CourseSection = {
     ]},
      { type: 'image_carousel', content: { 
         caption: 'Exemplo de mapping desenhado no pad e espaço para sua prática.', 
-        images: ['/images/mapping_3_1.png', '/images/mapping_3_2.png'] 
+        images: [
+            '/images/mapping_3_1.png', 
+            '/images/mapping_3_2.png'
+        ] 
     } },
   ]
 };

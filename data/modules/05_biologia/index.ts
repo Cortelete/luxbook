@@ -14,7 +14,11 @@ export const biologiaSection: CourseSection = {
     ]},
     { type: 'image_carousel', content: { 
         caption: 'O ciclo de vida dos cílios: Anágena, Catágena e Telógena.', 
-        images: ['/images/biologia_1_1.png'] 
+        images: [
+          '/images/biologia_1_1.png',
+          '/images/biologia_1_2.png',
+          '/images/biologia_1_3.png'
+        ] 
     } },
     { type: 'subsection_title', id: 'biologia_alergias', content: '4.2. Alergias vs. Irritação: Como Identificar, Prevenir e Agir' },
     { type: 'image_carousel', content: { 
@@ -37,7 +41,11 @@ export const biologiaSection: CourseSection = {
     ]},
     { type: 'image_carousel', content: { 
         caption: 'Exemplos de condições que são contraindicações: blefarite e terçol.', 
-        images: ['/images/biologia_3_1.png', '/images/biologia_3_2.png'] 
+        images: [
+          '/images/biologia_3_1.png', 
+          '/images/biologia_3_2.png',
+          '/images/biologia_3_3.png'
+        ] 
     } },
     { type: 'subsection_title', id: 'biologia_anamnese', content: '4.4. Ficha de Anamnese: A sua Ferramenta de Segurança Profissional' },
     { type: 'paragraph', content: 'É um questionário %%obrigatório%% que a cliente preenche e assina ANTES do primeiro procedimento. Ele protege você e a cliente. Perguntas essenciais de EXEMPLO:' },
