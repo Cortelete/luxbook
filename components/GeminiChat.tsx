@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect, useCallback, memo } from 'react';
 import { askAiTutor } from '../services/geminiService';
 import { ChatIcon, CloseIcon, SendIcon, SparklesIcon, LockClosedIcon } from './icons';
 import { CourseSection } from '../lib/types';
+import { marked } from 'marked';
 
 interface Message {
   sender: 'user' | 'ai';
@@ -59,11 +60,7 @@ const GeminiChat: React.FC<GeminiChatProps> = memo(({ activeSection, isUnlocked,
 
     const aiResponseText = await askAiTutor(input, activeSection);
     
-    const formattedHtml = aiResponseText
-        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-        .replace(/\n/g, '<br />');
-
-    const aiMessage: Message = { sender: 'ai', text: formattedHtml };
+    const aiMessage: Message = { sender: 'ai', text: aiResponseText };
     setMessages((prev) => [...prev, aiMessage]);
     setIsLoading(false);
   }, [input, isLoading, activeSection]);
@@ -189,7 +186,14 @@ const GeminiChat: React.FC<GeminiChatProps> = memo(({ activeSection, isUnlocked,
               {messages.map((msg, index) => (
                 <div key={index} className={`flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
                   <div className={`${msg.sender === 'user' ? 'bg-gold text-dark-bg' : 'bg-light-hover dark:bg-dark-hover text-light-text-primary dark:text-dark-text-primary'} p-3 rounded-lg max-w-xs lg:max-w-sm`}>
-                    <p className="text-sm" dangerouslySetInnerHTML={{ __html: msg.text }} />
+                    {msg.sender === 'user' ? (
+                      <p className="text-sm" style={{ whiteSpace: 'pre-wrap' }}>{msg.text}</p>
+                    ) : (
+                      <div 
+                        className="text-sm prose prose-sm dark:prose-invert max-w-none [&_p]:my-2 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+                        dangerouslySetInnerHTML={{ __html: marked.parse(msg.text, { gfm: true, breaks: true }) as string }} 
+                      />
+                    )}
                   </div>
                 </div>
               ))}
