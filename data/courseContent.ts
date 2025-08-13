@@ -10,6 +10,7 @@ import { kitSection } from './modules/07_kit/index';
 import { aplicacaoSection } from './modules/08_aplicacao/index';
 import { manutencaoSection } from './modules/09_manutencao/index';
 import { remocaoSection } from './modules/10_remocao/index';
+import { analisePraticaSection } from './modules/analise_pratica/index';
 // Módulo 11 (horaDaAcao) é usado para o modal de dicas e não entra na navegação principal.
 import { nossosCursosSection } from './modules/12_nossosCursos/index';
 import { horaDaAcaoSection } from './modules/13_fim/index';
@@ -28,6 +29,7 @@ export const courseData: CourseSection[] = [
   aplicacaoSection,
   manutencaoSection,
   remocaoSection,
+  analisePraticaSection,
   empreendedoraSection,
   vipSection,
   horaDaAcaoSection, // Graduation Gate leads here

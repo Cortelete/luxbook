@@ -2,7 +2,7 @@ import { CourseSection } from '../../../lib/types';
 
 export const horaDaAcaoSection: CourseSection = {
   id: 'horaDaAcao',
-  title: '10. Hora da Ação',
+  title: '11. Hora da Ação',
   brief: 'Transforme conhecimento em sucesso e pegue suas dicas de ouro!',
   content: [
     { type: 'paragraph', content: 'Chegamos ao fim de um ciclo inesquecível. E antes de tudo, queremos deixar registrado o nosso mais profundo agradecimento a cada uma de vocês que fez parte desse curso.' },
