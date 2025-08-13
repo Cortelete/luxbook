@@ -12,7 +12,7 @@ export const tecnicaSection: CourseSection = {
       '**Área de Contato:** A base da extensão deve estar %%100% acoplada%% ao fio natural, sem pontas soltas.'
     ]},
     { type: 'image_carousel', content: { 
-        caption: 'Ilustração detalhada mostrando a acoplagem correta, a distância da pálpebra, e exemplos de erros comuns: muita cola, base solta, colada na pele.', 
+        caption: '', 
         images: [
             '/images/tecnica_1_1.png', 
             '/images/tecnica_1_2.png', 
@@ -36,7 +36,7 @@ export const tecnicaSection: CourseSection = {
     { type: 'subsection_title', id: 'tecnica_tipos', content: '2.2. Tipos de Fios e Técnicas: O seu Menu de Estilos' },
     { type: 'paragraph', content: 'Antes dos volumes, veio o %%Clássico Fio a Fio%%: a técnica de aplicar uma única extensão por fio natural. Hoje, os %%Volumes Tecnológicos%% dominam o mercado pela praticidade e qualidade. Existe o %%fio Ellipse%%, que é oco por dentro, sendo por isso mais macio e o mais indicado para aplicação em clientes. Já o %%fio cônico%% é mais adequado para treinos, por serem mais resistentes.' },
     { type: 'image_carousel', content: { 
-        caption: 'Diferentes fios tecnológicos: Fio Y, Fio W e Volume Russo.', 
+        caption: '', 
         images: [
             '/images/tecnica_2_1.png',
             '/images/tecnica_2_2.png'
@@ -60,7 +60,7 @@ export const tecnicaSection: CourseSection = {
       '**Curvaturas:** A curvatura define o nível de "curvatura" do fio.'
     ]},
      { type: 'image_carousel', content: { 
-        caption: 'Comparativo das curvaturas mais comuns: C, D e M.', 
+        caption: '', 
         images: [
             '/images/tecnica_3_1.png',
             '/images/tecnica_3_2.png',
@@ -79,7 +79,7 @@ export const tecnicaSection: CourseSection = {
     { type: 'subsection_title', id: 'tecnica_analise', content: '2.4. Análise do Fio Natural: A Regra de Ouro da Saúde Ocular' },
     { type: 'note', content: 'Atenção Máxima: A saúde do fio natural da sua cliente é a sua prioridade. Antes de tocar em qualquer extensão, você deve fazer uma análise criteriosa.' },
     { type: 'image_carousel', content: { 
-        caption: 'Analisando a saúde e direção do fio natural antes do procedimento.', 
+        caption: '', 
         images: [ 
           '/images/tecnica_4_1.png',
           '/images/tecnica_4_2.png',

@@ -15,7 +15,7 @@ export const analisePraticaSection: CourseSection = {
     {
       type: 'image_carousel',
       content: {
-        caption: 'Analise cada caso e descreva sua abordagem. Não há resposta certa ou errada, mas sim a justificativa técnica!',
+        caption: '',
         images: [
           '/images/analise_pratica_1.png',
           '/images/analise_pratica_2.png',

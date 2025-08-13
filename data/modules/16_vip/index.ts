@@ -8,7 +8,7 @@ export const vipSection: CourseSection = {
     { type: 'subsection_title', id: 'vip_intro', content: 'Bem-vinda ao Acesso VIP!' },
     { type: 'paragraph', content: 'Como membro VIP, você terá acesso às técnicas mais inovadoras do mercado, segredos de visagismo avançado e mentoria para escalar seu negócio de forma exponencial.' },
     { type: 'image_carousel', content: { 
-        caption: 'Exemplos de técnicas avançadas e visagismo para clientes VIP.', 
+        caption: '', 
         images: ['/images/vip_1_1.png'] 
     } },
     { type: 'note', content: 'O conteúdo completo para este módulo exclusivo estará disponível em breve. Prepare-se para se tornar uma referência no mercado!' },

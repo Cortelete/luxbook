@@ -14,7 +14,7 @@ export const fundamentosSection: CourseSection = {
       '**Versatilidade:** Permite criar desde looks %%"super naturais"%% até os mais %%dramáticos e glamorosos%%.'
     ]},
     { type: 'image_carousel', content: { 
-        caption: 'Exemplos de looks possíveis com a extensão de cílios, do natural ao glamoroso.', 
+        caption: '', 
         images: [
             '/images/fundamentos_1_1.png', 
             '/images/fundamentos_1_2.png',

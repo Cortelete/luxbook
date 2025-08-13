@@ -8,7 +8,7 @@ export const mappingSection: CourseSection = {
     { type: 'subsection_title', id: 'mapping_designs', content: '3.1. Os 3 Designs Essenciais' },
     { type: 'paragraph', content: '%%Mapping%% é o mapa que você desenha no protetor de pálpebras (PAD) para guiar a aplicação.' },
     { type: 'image_carousel', content: { 
-        caption: 'Ilustração clara dos 3 formatos de olho com o desenho do mapping sobre eles: Boneca, Gatinho e Esquilo, mostrando a distribuição dos tamanhos.', 
+        caption: '', 
         images: [
             '/images/mapping_1_1.png', 
             '/images/mapping_1_2.png', 
@@ -23,7 +23,7 @@ export const mappingSection: CourseSection = {
     { type: 'subsection_title', id: 'mapping_visagismo', content: '3.2. Visagismo: A Arte de Personalizar para Cada Rosto e Olho' },
     { type: 'paragraph', content: '%%Visagismo%% é analisar as características únicas da cliente para criar o design perfeito.'},
     { type: 'image_carousel', content: { 
-        caption: 'Exemplos de formatos de olho: Amendoado, Redondo e Caído.', 
+        caption: '', 
         images: [
             '/images/mapping_2_1.png',
             '/images/mapping_2_2.png',
@@ -48,7 +48,7 @@ export const mappingSection: CourseSection = {
         '3. Anote os tamanhos em cada secção de acordo com o design escolhido. Lembre-se de usar tamanhos menores (%%7-8mm%%) nos cantos internos para um acabamento natural.'
     ]},
      { type: 'image_carousel', content: { 
-        caption: 'Exemplo de mapping desenhado no pad e espaço para sua prática.', 
+        caption: '', 
         images: [
             '/images/mapping_3_1.png', 
             '/images/mapping_3_2.png'

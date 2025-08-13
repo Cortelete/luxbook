@@ -27,7 +27,7 @@ export const kitSection: CourseSection = {
           '**A Gota Perfeita:** A gota de cola deve ser redonda e preta. Se estiver transparente ou grossa, descarte. Troque a sua gota a cada %%15-20 minutos%% durante o procedimento.'
       ]},
       { type: 'image_carousel', content: { 
-          caption: 'Adesivo: gota perfeita vs. gota oxidada, e armazenamento com sílica.', 
+          caption: '', 
           images: [
             '/images/kit_2_1.png', 
             '/images/kit_2_2.png'

@@ -27,7 +27,7 @@ export const manutencaoSection: CourseSection = {
       '**Verificação Final:** Ao concluir o preenchimento, penteie os cílios novamente. Verifique se todas as extensões estão bem acopladas e o volume está equilibrado. Utilize o %%nano mister%%.'
     ]},
     { type: 'image_carousel', content: { 
-        caption: 'Preenchendo as falhas com novas extensões para restaurar o design.', 
+        caption: '', 
         images: [
           '/images/manutencao_3_1.png',
           '/images/manutencao_3_2.png'
