@@ -1,10 +1,11 @@
+
 import React, { memo, useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import { CourseSection, ContentItem, TableData, ImageCarouselData, TipCategoryData } from '../lib/types';
 import { 
     CheckSquareIcon, MailIcon, WhatsappIcon, InstagramIcon, BookOpenIcon, 
     PencilSquareIcon, SparklesIcon, CloseIcon, ChevronDownIcon, 
     AcademicCapIcon, MegaphoneIcon, HeartIcon, BriefcaseIcon, CurrencyDollarIcon, 
-    ChevronLeftIcon 
+    ChevronLeftIcon, ChevronRightIcon 
 } from './icons';
 import ImageCarousel from './ImageCarousel';
 import GraduationGate from './GraduationGate';
@@ -280,105 +281,145 @@ const HomePageLayout: React.FC<{section: CourseSection; allSections: CourseSecti
 });
 
 const ActionTipsModal: React.FC<{onClose: () => void}> = memo(({ onClose }) => {
-    const tipCategories = useMemo(() =>
-        actionTipsContent.content
+    const { categories, getCategoryIcon } = useMemo(() => {
+        const cats = actionTipsContent.content
             .filter(item => item.type === 'tip_category')
-            .map(item => item.content as TipCategoryData),
-    []);
+            .map(item => item.content as TipCategoryData);
+
+        const getIcon = (iconName: TipCategoryData['icon'], props: { className: string }) => {
+            switch (iconName) {
+                case 'MegaphoneIcon': return <MegaphoneIcon {...props} />;
+                case 'HeartIcon': return <HeartIcon {...props} />;
+                case 'BriefcaseIcon': return <BriefcaseIcon {...props} />;
+                case 'CurrencyDollarIcon': return <CurrencyDollarIcon {...props} />;
+                default: return <SparklesIcon {...props} />;
+            }
+        };
+        return { categories: cats, getCategoryIcon: getIcon };
+    }, []);
 
     const [selectedCategory, setSelectedCategory] = useState<TipCategoryData | null>(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    const getCategoryIcon = (iconName: TipCategoryData['icon']) => {
-        const props = { className: "w-8 h-8 text-gold" };
-        switch (iconName) {
-            case 'MegaphoneIcon': return <MegaphoneIcon {...props} />;
-            case 'HeartIcon': return <HeartIcon {...props} />;
-            case 'BriefcaseIcon': return <BriefcaseIcon {...props} />;
-            case 'CurrencyDollarIcon': return <CurrencyDollarIcon {...props} />;
-            default: return <SparklesIcon {...props} />;
+    const handleSelectCategory = useCallback((category: TipCategoryData) => {
+        setSelectedCategory(category);
+        setCurrentIndex(0);
+    }, []);
+
+    const handleGoBack = useCallback(() => {
+        setSelectedCategory(null);
+    }, []);
+
+    const goToNext = useCallback(() => {
+        if (selectedCategory) {
+            setCurrentIndex(prev => (prev < selectedCategory.tips.length - 1 ? prev + 1 : prev));
         }
-    };
-    
+    }, [selectedCategory]);
+
+    const goToPrevious = useCallback(() => {
+        setCurrentIndex(prev => (prev > 0 ? prev - 1 : prev));
+    }, []);
+
     const createMarkup = (text: string) => {
         const withGold = text.replace(/%%(.*?)%%/g, '<span class="text-gold font-semibold">$1</span>');
-        const withBold = withGold.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-light-text-primary dark:text-dark-text-primary">$1</strong>');
+        const withBold = withGold.replace(/\*\*(.*?)\*\*/g, '<strong class="font-semibold text-dark-text-primary">$1</strong>');
         return { __html: withBold };
     };
 
     return (
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[10000] flex items-center justify-center p-4" onClick={onClose}>
             <div 
-                className="relative bg-dark-card rounded-xl shadow-2xl w-full text-left border-2 border-gold/30 animate-page-enter flex flex-col overflow-hidden"
+                className="relative bg-dark-card rounded-xl shadow-2xl w-full max-w-2xl text-left border-2 border-gold/30 animate-page-enter flex flex-col overflow-hidden"
                 onClick={e => e.stopPropagation()}
-                style={{
-                    maxWidth: selectedCategory ? '700px' : '900px',
-                    height: 'clamp(400px, 90vh, 700px)',
-                    transition: 'max-width 0.5s ease-in-out'
-                }}
+                style={{ height: 'clamp(500px, 80vh, 600px)' }}
             >
-                {/* Main View - Categories */}
-                <div className={`transition-transform duration-500 ease-in-out w-full h-full flex flex-col ${selectedCategory ? '-translate-x-full absolute' : 'translate-x-0'}`}>
-                    <div className="p-5 border-b border-dark-border flex justify-between items-center flex-shrink-0">
-                        <div className="flex items-center space-x-3">
-                            <SparklesIcon className="w-7 h-7 text-gold" />
-                            <h3 className="text-xl font-bold text-dark-text-primary">Dicas de Ouro para o Sucesso</h3>
-                        </div>
-                        <button onClick={onClose} className="text-dark-text-secondary hover:text-gold transition-colors">
-                            <CloseIcon className="w-6 h-6" />
-                        </button>
+                {/* Modal Header */}
+                <div className="p-5 border-b border-dark-border flex justify-between items-center flex-shrink-0">
+                    <div className="flex items-center space-x-3 min-w-0">
+                        {selectedCategory ? (
+                            <>
+                                <button onClick={handleGoBack} className="text-dark-text-secondary hover:text-gold transition-colors p-1 rounded-full -ml-2 flex-shrink-0">
+                                    <ChevronLeftIcon className="w-6 h-6" />
+                                </button>
+                                <div className="flex-shrink-0">{getCategoryIcon(selectedCategory.icon, { className: "w-7 h-7 text-gold" })}</div>
+                                <h3 className="text-xl font-bold text-dark-text-primary truncate">{selectedCategory.title}</h3>
+                            </>
+                        ) : (
+                            <>
+                                <SparklesIcon className="w-7 h-7 text-gold flex-shrink-0" />
+                                <h3 className="text-xl font-bold text-dark-text-primary">Dicas de Ouro</h3>
+                            </>
+                        )}
                     </div>
-                    <div className="overflow-y-auto p-6 md:p-8 h-full">
-                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            {tipCategories.map((cat, index) => (
-                                <button key={index} onClick={() => setSelectedCategory(cat)} className="group relative text-left p-6 bg-dark-hover rounded-lg border border-dark-border hover:border-gold/50 hover:shadow-lg hover:shadow-gold/10 transition-all duration-300 transform hover:-translate-y-1">
-                                    <div className="flex items-start space-x-4">
-                                        <div className="flex-shrink-0 bg-dark-bg p-3 rounded-full">
-                                            {getCategoryIcon(cat.icon)}
-                                        </div>
-                                        <div>
-                                            <h4 className="text-lg font-bold text-dark-text-primary group-hover:text-gold transition-colors">{cat.title}</h4>
-                                            <p className="text-sm text-dark-text-secondary mt-1">{cat.summary}</p>
-                                        </div>
+                    <button onClick={onClose} className="text-dark-text-secondary hover:text-gold transition-colors ml-4 flex-shrink-0">
+                        <CloseIcon className="w-6 h-6" />
+                    </button>
+                </div>
+
+                {/* Modal Content */}
+                <div className="flex-grow p-6 md:p-8 overflow-y-auto">
+                    {!selectedCategory ? (
+                        // Category Selection View
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 animate-fade-in-slide-up">
+                            {categories.map((category) => (
+                                <button
+                                    key={category.title}
+                                    onClick={() => handleSelectCategory(category)}
+                                    className="bg-dark-hover p-6 rounded-lg border border-dark-border text-left group hover:border-gold transition-all duration-300 transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-gold/50"
+                                >
+                                    <div className="flex items-center space-x-4 mb-3">
+                                        {getCategoryIcon(category.icon, { className: "w-8 h-8 text-gold flex-shrink-0" })}
+                                        <h4 className="text-lg font-bold text-dark-text-primary group-hover:text-gold transition-colors">{category.title}</h4>
                                     </div>
+                                    <p className="text-sm text-dark-text-secondary">{category.summary}</p>
                                 </button>
                             ))}
                         </div>
-                    </div>
-                </div>
-
-                {/* Detail View - Tips */}
-                <div className={`transition-transform duration-500 ease-in-out w-full h-full absolute top-0 left-0 flex flex-col ${selectedCategory ? 'translate-x-0' : 'translate-x-full'}`}>
-                    {selectedCategory && (
-                        <>
-                            <div className="p-5 border-b border-dark-border flex items-center flex-shrink-0">
-                                <button onClick={() => setSelectedCategory(null)} className="text-dark-text-secondary hover:text-gold transition-colors p-2 -ml-2 mr-2">
-                                    <ChevronLeftIcon className="w-6 h-6" />
-                                </button>
-                                <div className="flex items-center space-x-3">
-                                   {getCategoryIcon(selectedCategory.icon)}
-                                   <h3 className="text-xl font-bold text-dark-text-primary">{selectedCategory.title}</h3>
-                                </div>
-                                <button onClick={onClose} className="text-dark-text-secondary hover:text-gold transition-colors ml-auto">
-                                    <CloseIcon className="w-6 h-6" />
-                                </button>
+                    ) : (
+                        // Tips Carousel View
+                        <div className="w-full h-full flex flex-col items-center justify-center text-center">
+                            <div key={currentIndex} className="w-full flex-grow flex items-center justify-center animate-fade-in-slide-up">
+                                <p 
+                                    className="text-dark-text-secondary text-xl leading-relaxed"
+                                    dangerouslySetInnerHTML={createMarkup(selectedCategory.tips[currentIndex])}
+                                >
+                                </p>
                             </div>
-                            <div className="overflow-y-auto p-6 md:p-8 h-full">
-                                <ul className="space-y-4">
-                                    {selectedCategory.tips.map((tip, index) => (
-                                        <li key={index} className="flex items-start">
-                                            <SparklesIcon className="w-5 h-5 text-gold mr-4 mt-1 flex-shrink-0" />
-                                            <span className="text-dark-text-secondary leading-relaxed" dangerouslySetInnerHTML={createMarkup(tip)}></span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
-                        </>
+                        </div>
                     )}
                 </div>
+
+                {/* Modal Footer (for carousel navigation) */}
+                {selectedCategory && (
+                    <div className="flex-shrink-0 p-4 border-t border-dark-border flex items-center justify-between">
+                        <button
+                            onClick={goToPrevious}
+                            disabled={currentIndex === 0}
+                            className="flex items-center space-x-2 text-dark-text-secondary hover:text-gold disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-md px-3 py-2"
+                        >
+                            <ChevronLeftIcon className="w-5 h-5" />
+                            <span>Anterior</span>
+                        </button>
+
+                        <span className="font-mono text-sm text-dark-text-secondary">
+                            {currentIndex + 1} / {selectedCategory.tips.length}
+                        </span>
+
+                        <button
+                            onClick={goToNext}
+                            disabled={currentIndex === selectedCategory.tips.length - 1}
+                            className="flex items-center space-x-2 text-dark-text-secondary hover:text-gold disabled:opacity-50 disabled:cursor-not-allowed transition-colors rounded-md px-3 py-2"
+                        >
+                            <span>Próxima</span>
+                            <ChevronRightIcon className="w-5 h-5" />
+                        </button>
+                    </div>
+                )}
             </div>
         </div>
     );
 });
+
 
 const CoursesPageLayout: React.FC<{section: CourseSection; allSections: CourseSection[]; onNavigate: (id: string) => void;}> = memo(({ section, allSections, onNavigate }) => {
     return (
