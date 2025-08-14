@@ -8,7 +8,6 @@
     "build": "mkdir -p public && cp index.html public/ && cp -r data/ public/data/ && esbuild index.tsx --bundle --minify --outfile=public/index.js --jsx=automatic"
   },
   "dependencies": {
-    "@google/genai": "^1.12.0",
     "@supabase/supabase-js": "^2.44.4",
     "react": "^18.3.1",
     "react-dom": "^18.3.1"

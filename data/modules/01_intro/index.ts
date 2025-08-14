@@ -12,7 +12,6 @@ export const introSection: CourseSection = {
     { type: 'subsection_title', id: 'how-to-use', content: 'Como Aproveitar ao Máximo' },
     { type: 'list', content: [
       '**Explore sem Medo:** Use os cartões abaixo ou o menu lateral para navegar pelos módulos. Sinta-se à vontade para ir e voltar no conteúdo sempre que precisar reforçar um conceito.',
-      '**Converse com o Tutor IA:** Viu o ícone de chat dourado? Ele é seu assistente pessoal! Clique nele a qualquer momento para tirar dúvidas sobre o módulo que você está estudando. Ele foi treinado com este material para te ajudar.',
       '**Mão na Massa:** A teoria é a base, mas a prática leva à perfeição. Após cada seção teórica, reserve um tempo para praticar em uma esponja ou boneca de treino. A repetição é sua melhor amiga.'
     ]},
     { type: 'note', content: 'Lembre-se: não há atalhos para a perfeição, mas há um caminho. E nós vamos percorrê-lo juntas.' },

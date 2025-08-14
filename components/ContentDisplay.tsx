@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState, useCallback, useMemo, useRef } from '
 import { CourseSection, ContentItem, TableData, ImageCarouselData, TipCategoryData } from '../lib/types';
 import { 
     CheckSquareIcon, MailIcon, WhatsappIcon, InstagramIcon, BookOpenIcon, 
-    ChatIcon, PencilSquareIcon, SparklesIcon, CloseIcon, ChevronDownIcon, 
+    PencilSquareIcon, SparklesIcon, CloseIcon, ChevronDownIcon, 
     AcademicCapIcon, MegaphoneIcon, HeartIcon, BriefcaseIcon, CurrencyDollarIcon, 
     ChevronLeftIcon 
 } from './icons';
@@ -211,8 +211,7 @@ const HomePageLayout: React.FC<{section: CourseSection; allSections: CourseSecti
 
     const getInstructionIcon = (index: number) => {
         if (index === 0) return <BookOpenIcon className="w-8 h-8 text-gold" />;
-        if (index === 1) return <ChatIcon className="w-8 h-8 text-gold" />;
-        if (index === 2) return <PencilSquareIcon className="w-8 h-8 text-gold" />;
+        if (index === 1) return <PencilSquareIcon className="w-8 h-8 text-gold" />;
         return null;
     }
 
@@ -238,7 +237,7 @@ const HomePageLayout: React.FC<{section: CourseSection; allSections: CourseSecti
             {instructions.length > 0 && (
                 <div className="max-w-5xl mx-auto py-12 px-4">
                      <h2 className="text-3xl font-bold text-center text-gold mb-12">{instructionsTitleItem?.content as string}</h2>
-                     <div className="grid md:grid-cols-3 gap-8 text-center">
+                     <div className="grid md:grid-cols-2 gap-8 text-center">
                         {instructions.map((inst, index) => (
                             <div key={index} className="flex flex-col items-center p-6 bg-light-card dark:bg-dark-card rounded-xl shadow-lg border border-light-border dark:border-dark-border">
                                 <div className="p-4 bg-gold/10 rounded-full mb-4">

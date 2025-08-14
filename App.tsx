@@ -4,11 +4,9 @@ import ContentDisplay from './components/ContentDisplay';
 import { MenuIcon, SunIcon, MoonIcon } from './components/icons';
 import { courseData as initialCourseData } from './data/courseContent';
 import { adminSection } from './data/adminContent';
-import GeminiChat from './components/GeminiChat';
 import CustomCursor from './components/CustomCursor';
 import Footer from './components/Footer';
 import Login from './components/Login';
-import AiChatGate from './components/AiChatGate';
 import { UserData, CourseType } from './lib/types';
 import UserProfile from './components/UserProfile';
 
@@ -27,7 +25,6 @@ const App: React.FC = () => {
 
   // --- FEATURE GATING STATE ---
   const [isGraduated, setGraduated] = useState<boolean>(() => sessionStorage.getItem('isGraduated') === 'true');
-  const [showAiGate, setShowAiGate] = useState(false);
   const [showUserProfile, setShowUserProfile] = useState(false);
   
   // --- COURSE CONTENT STATE ---
@@ -71,14 +68,6 @@ const App: React.FC = () => {
     }
     return allSections;
   }, [authenticatedUser, filteredSections]);
-  
-  // Conditionally unlock chat based on user type or sessionStorage flag
-  const isChatUnlocked = useMemo(() => {
-    if (authenticatedUser?.courseType === 'Lash Empresária VIP' || authenticatedUser?.roles.includes('mentor')) {
-        return true;
-    }
-    return sessionStorage.getItem('isChatUnlocked') === 'true';
-  }, [authenticatedUser]);
 
 
   // --- MOUSE TRACKING FOR AURORA EFFECT ---
@@ -109,31 +98,23 @@ const App: React.FC = () => {
   const activeSection = sectionsForSidebar.find(section => section.id === mainSectionId);
   
   const closeSidebar = useCallback(() => setSidebarOpen(false), []);
-  const closeAiGate = useCallback(() => setShowAiGate(false), []);
-  const requestChatUnlock = useCallback(() => setShowAiGate(true), []);
   const closeProfile = useCallback(() => setShowUserProfile(false), []);
   
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         closeSidebar();
-        closeAiGate();
         closeProfile();
       }
     };
     document.addEventListener('keydown', handleEscape);
     return () => document.removeEventListener('keydown', handleEscape);
-  }, [closeSidebar, closeAiGate, closeProfile]);
+  }, [closeSidebar, closeProfile]);
 
   // --- HANDLERS ---
   const handleGraduationSuccess = useCallback(() => {
     sessionStorage.setItem('isGraduated', 'true');
     setGraduated(true);
-  }, []);
-
-  const handleAiChatUnlockSuccess = useCallback(() => {
-    sessionStorage.setItem('isChatUnlocked', 'true');
-    setShowAiGate(false);
   }, []);
 
   const handleLoginSuccess = useCallback((user: UserData) => {
@@ -142,7 +123,6 @@ const App: React.FC = () => {
     
     // Reset progress for new login
     sessionStorage.removeItem('isGraduated');
-    sessionStorage.removeItem('isChatUnlocked');
     setGraduated(false);
     setActiveSectionId('intro');
   }, []);
@@ -171,7 +151,6 @@ const App: React.FC = () => {
         <Login onLoginSuccess={handleLoginSuccess} />
       ) : (
         <>
-          {showAiGate && <AiChatGate onSuccess={handleAiChatUnlockSuccess} onClose={closeAiGate} />}
           {showUserProfile && authenticatedUser && (
               <UserProfile user={authenticatedUser} onClose={closeProfile} />
           )}
@@ -237,12 +216,6 @@ const App: React.FC = () => {
             </div>
             <Footer />
           </main>
-
-          <GeminiChat 
-            activeSection={activeSection}
-            isUnlocked={isChatUnlocked}
-            onRequestUnlock={requestChatUnlock}
-          />
         </>
       )}
     </div>
