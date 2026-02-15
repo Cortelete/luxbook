@@ -65,4 +65,11 @@ export const userAccessCodes: Record<string, UserData> = {
     roles: ['student'],
     courseType: 'Lash Profissional',
   },
+  'INGR42': {
+    id: 'ingridkb',
+    name: 'Ingrid Kauane Bley',
+    email: 'ikauanebley@gmail.com',
+    roles: ['student'],
+    courseType: 'Lash Profissional',
+  },
 };
